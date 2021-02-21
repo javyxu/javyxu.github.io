@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"javyxu.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="使你的Python代码更优雅注： 本人代码主要以Python3为主。 遍历一个范围的数字 Python2的普通写法 12for i in [0, 1, 2, 3, 4, 5]:    print i ** 2 或者： 12for i in range(6):    print i ** 2 Python2最好的优雅的写法是 12for i in xrange(6):    print i ** 2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使你的Python代码更优雅">
+<meta property="og:url" content="https://javyxu.cn/python/python_code_elegant/index.html">
+<meta property="og:site_name" content="Tech Blog">
+<meta property="og:description" content="使你的Python代码更优雅注： 本人代码主要以Python3为主。 遍历一个范围的数字 Python2的普通写法 12for i in [0, 1, 2, 3, 4, 5]:    print i ** 2 或者： 12for i in range(6):    print i ** 2 Python2最好的优雅的写法是 12for i in xrange(6):    print i ** 2">
+<meta property="og:locale">
+<meta property="article:published_time" content="2018-12-30T23:00:00.000Z">
+<meta property="article:modified_time" content="2021-02-21T02:37:33.322Z">
+<meta property="article:author" content="Javy">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://javyxu.cn/python/python_code_elegant/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>使你的Python代码更优雅 | Tech Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Tech Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Javy's Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-algorithm">
+
+    <a href="/algorithm/" rel="section"><i class="fa fa-code fa-fw"></i>Algorithm</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/javyxu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="https://javyxu.cn/python/python_code_elegant/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Javy">
+      <meta itemprop="description" content="You can create art and beauty on a computer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使你的Python代码更优雅
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-12-31 07:00:00" itemprop="dateCreated datePublished" datetime="2018-12-31T07:00:00+08:00">2018-12-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-21 10:37:33" itemprop="dateModified" datetime="2021-02-21T10:37:33+08:00">2021-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="使你的Python代码更优雅"><a href="#使你的Python代码更优雅" class="headerlink" title="使你的Python代码更优雅"></a>使你的Python代码更优雅</h2><p><strong>注：</strong> 本人代码主要以Python3为主。</p>
+<h3 id="遍历一个范围的数字"><a href="#遍历一个范围的数字" class="headerlink" title="遍历一个范围的数字"></a>遍历一个范围的数字</h3><ol>
+<li><p>Python2的普通写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]:</span><br><span class="line">    <span class="built_in">print</span> i ** <span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p>或者：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">6</span>):</span><br><span class="line">    <span class="built_in">print</span> i ** <span class="number">2</span></span><br></pre></td></tr></table></figure></li>
+<li><p>Python2最好的优雅的写法是</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">6</span>):</span><br><span class="line">    <span class="built_in">print</span> i ** <span class="number">2</span></span><br></pre></td></tr></table></figure></li>
+<li><p>在Python3中的优雅写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">6</span>):</span><br><span class="line">    print(i ** <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p>xrange会返回一个迭代器，用来一次一个值地遍历一个范围。这种方式会比range更省内存。xrange在Python3中已经改名为range。</p>
+</li>
+</ol>
+<h3 id="遍历一个集合"><a href="#遍历一个集合" class="headerlink" title="遍历一个集合"></a>遍历一个集合</h3><a id="more"></a>
+<ol>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">colors = [<span class="string">&#x27;r&#x27;</span>, <span class="string">&#x27;g&#x27;</span>, <span class="string">&#x27;b&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(colors)):</span><br><span class="line">    print(colors[i])</span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> color <span class="keyword">in</span> colors:</span><br><span class="line">    print(color)</span><br></pre></td></tr></table></figure>
+<h3 id="反向遍历"><a href="#反向遍历" class="headerlink" title="反向遍历"></a>反向遍历</h3></li>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">colors = [<span class="string">&#x27;r&#x27;</span>, <span class="string">&#x27;g&#x27;</span>, <span class="string">&#x27;b&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(colors) - <span class="number">1</span>, -<span class="number">1</span>, -<span class="number">1</span>):</span><br><span class="line">    print(colors[i])</span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> color <span class="keyword">in</span> <span class="built_in">reversed</span>(colors):</span><br><span class="line">    print(color)</span><br></pre></td></tr></table></figure>
+<h3 id="遍历一个集合及其下标"><a href="#遍历一个集合及其下标" class="headerlink" title="遍历一个集合及其下标"></a>遍历一个集合及其下标</h3></li>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">colors = [<span class="string">&#x27;r&#x27;</span>, <span class="string">&#x27;g&#x27;</span>, <span class="string">&#x27;b&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(colors)):</span><br><span class="line">    print(i， <span class="string">&#x27;---&gt;&#x27;</span>, colors[i])</span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i, color <span class="keyword">in</span> <span class="built_in">enumerate</span>(colors):</span><br><span class="line">    print(i, <span class="string">&#x27;---&gt;&#x27;</span>, color)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><strong>说明：</strong> 这种写法效率高，优雅，而且可以省去亲自创建和自增下标。当你发现你在操作集合的下标时，你很有可能在做错事。</p>
+<h3 id="遍历两个集合"><a href="#遍历两个集合" class="headerlink" title="遍历两个集合"></a>遍历两个集合</h3><ol>
+<li><p>Python2普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">names = [<span class="string">&#x27;x&#x27;</span>, <span class="string">&#x27;y&#x27;</span>, <span class="string">&#x27;z&#x27;</span>]</span><br><span class="line">colors = [<span class="string">&#x27;r&#x27;</span>, <span class="string">&#x27;g&#x27;</span>, <span class="string">&#x27;b&#x27;</span>]</span><br><span class="line"></span><br><span class="line">n = <span class="built_in">min</span>(<span class="built_in">len</span>(names), <span class="built_in">len</span>(colors))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">    <span class="built_in">print</span> names[i]， <span class="string">&#x27;---&gt;&#x27;</span>, colors[i]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> name, color <span class="keyword">in</span> <span class="built_in">zip</span>(names, colors):</span><br><span class="line">    <span class="built_in">print</span> name, <span class="string">&#x27;---&gt;&#x27;</span>, color</span><br></pre></td></tr></table></figure></li>
+<li><p>Python2优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> name, color <span class="keyword">in</span> izip(names, colors):</span><br><span class="line">    print(name, <span class="string">&#x27;---&gt;&#x27;</span>, color)</span><br></pre></td></tr></table></figure></li>
+<li><p>Python3中优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> name, color <span class="keyword">in</span> <span class="built_in">zip</span>(names, colors):</span><br><span class="line">    print(name, <span class="string">&#x27;---&gt;&#x27;</span>, color)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><strong>说明：</strong> zip在内存中生成一个新的列表，需要更多的内存。izip比zip效率更高。但是在Python3中，izip改名为zip，并替换了原来的zip成为内置函数。</p>
+<h3 id="有序地遍历"><a href="#有序地遍历" class="headerlink" title="有序地遍历"></a>有序地遍历</h3><ol>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="built_in">sorted</span>(colors, key=<span class="built_in">len</span>))</span><br></pre></td></tr></table></figure>
+<h3 id="调用一个函数直到遇到标记值"><a href="#调用一个函数直到遇到标记值" class="headerlink" title="调用一个函数直到遇到标记值"></a>调用一个函数直到遇到标记值</h3></li>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">blocks = []</span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    block = f.read(<span class="number">32</span>)</span><br><span class="line">    <span class="keyword">if</span> block == <span class="string">&#x27;&#x27;</span>:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    block.append(block)</span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> functools</span><br><span class="line">blocks = []</span><br><span class="line"><span class="keyword">for</span> block <span class="keyword">in</span> <span class="built_in">iter</span>(functools.partial(f.read, <span class="number">32</span>), <span class="string">&#x27;&#x27;</span>):</span><br><span class="line">    blocks.append(block)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><strong>说明：</strong> 这个例子里不太能看出来方法二的优势，甚至觉得partial让代码可读性更差了。方法二的优势在于iter的返回值是个迭代器，迭代器能用在各种地方，se、sorte、mi、max、heapq、sum……</p>
+<h3 id="在循环内识别多个退出点"><a href="#在循环内识别多个退出点" class="headerlink" title="在循环内识别多个退出点"></a>在循环内识别多个退出点</h3><ol>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find</span>(<span class="params">seq, target</span>):</span></span><br><span class="line">    flag = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">for</span> i, value <span class="keyword">in</span> <span class="built_in">enumerate</span>(seq):</span><br><span class="line">        <span class="keyword">if</span> value == target:</span><br><span class="line">            flag = <span class="literal">True</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> flag:</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> i</span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find</span>(<span class="params">seq, target</span>):</span></span><br><span class="line">    <span class="keyword">for</span> i, value <span class="keyword">in</span> <span class="built_in">enumerate</span>(seq):</span><br><span class="line">        <span class="keyword">if</span> value == target:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> i</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>  <strong>说明</strong>：此函数将在for执行完所有的循环后就会执行else。本人也是刚刚了解<code>for-else</code>语法，在什么情况下会执行到else里。这里有两种方法去理解else。</p>
+<ul>
+<li><p>把for看作if，当for后面的条件为False时执行else。其实条件为False时，就是for循环没被break出去，把所有循环都跑完的时候。</p>
+</li>
+<li><p>把else记成nobreak，当for没有被break，那么循环结束时会进入到else。</p>
+</li>
+</ul>
+<h3 id="遍历字典的key"><a href="#遍历字典的key" class="headerlink" title="遍历字典的key"></a>遍历字典的key</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">d = &#123;<span class="string">&#x27;x&#x27;</span>: <span class="string">&#x27;red&#x27;</span>, <span class="string">&#x27;y&#x27;</span>: <span class="string">&#x27;g&#x27;</span>, <span class="string">&#x27;z&#x27;</span>:<span class="string">&#x27;b&#x27;</span>&#125;</span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> d:</span><br><span class="line">  print(k)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">list</span>(d.keys()):</span><br><span class="line">  <span class="keyword">if</span> k.startwith(y):</span><br><span class="line">      <span class="keyword">del</span> d[k]</span><br></pre></td></tr></table></figure>
+<p><strong>说明：</strong> 什么时候应该使用第二种而不是第一种方法？当你需要修改字典的时候。</p>
+<p>如果你在迭代一个东西的时候修改它，那就是在冒天下之大不韪，接下来发生什么都活该。</p>
+<p>list(d.keys())把字典里所有的key都复制到一个列表里。然后你就可以修改字典了。</p>
+<h3 id="遍历一个字典的key和value"><a href="#遍历一个字典的key和value" class="headerlink" title="遍历一个字典的key和value"></a>遍历一个字典的key和value</h3><ol>
+<li><p>Python2普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 并不快，每次必须要重新哈希并做一次查找</span></span><br><span class="line"><span class="keyword">for</span> k <span class="keyword">in</span> d:</span><br><span class="line">    <span class="built_in">print</span> k, <span class="string">&#x27;---&gt;&#x27;</span>, d[k]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 产生一个很大的列表</span></span><br><span class="line"><span class="keyword">for</span> k, v <span class="keyword">in</span> d.items():</span><br><span class="line">    <span class="built_in">print</span> k, <span class="string">&#x27;---&gt;&#x27;</span>, v</span><br></pre></td></tr></table></figure></li>
+<li><p>Python2优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> k, v <span class="keyword">in</span> d.iteritems():</span><br><span class="line">    <span class="built_in">print</span> k, <span class="string">&#x27;---&gt;&#x27;</span>, v</span><br></pre></td></tr></table></figure></li>
+<li><p>Python3优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> k, v <span class="keyword">in</span> d.items():</span><br><span class="line">    print(k, <span class="string">&#x27;---&gt;&#x27;</span>, v)</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><strong>说明：</strong> Python3已经没有iteritems()了，items()的行为和iteritems()很接近。详情请看文档。</p>
+<h3 id="用key-value对构建字典"><a href="#用key-value对构建字典" class="headerlink" title="用key-value对构建字典"></a>用key-value对构建字典</h3>  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">names = [<span class="string">&#x27;x&#x27;</span>, <span class="string">&#x27;y&#x27;</span>, <span class="string">&#x27;z&#x27;</span>]</span><br><span class="line">colors = [<span class="string">&#x27;r&#x27;</span>, <span class="string">&#x27;g&#x27;</span>, <span class="string">&#x27;b&#x27;</span>]</span><br><span class="line"></span><br><span class="line">d = <span class="built_in">dict</span>(<span class="built_in">zip</span>(names, colors))</span><br></pre></td></tr></table></figure>
+<h3 id="用字典计数"><a href="#用字典计数" class="headerlink" title="用字典计数"></a>用字典计数</h3><ol>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">colors = [<span class="string">&#x27;r&#x27;</span>, <span class="string">&#x27;g&#x27;</span>, <span class="string">&#x27;r&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;g&#x27;</span>, <span class="string">&#x27;b&#x27;</span>]</span><br><span class="line"></span><br><span class="line">d = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> color <span class="keyword">in</span> colors:</span><br><span class="line">    <span class="keyword">if</span> color <span class="keyword">not</span> <span class="keyword">in</span> d:</span><br><span class="line">        d[color] == <span class="number">0</span></span><br><span class="line">    d[color] += <span class="number">1</span></span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">colors = [<span class="string">&#x27;r&#x27;</span>, <span class="string">&#x27;g&#x27;</span>, <span class="string">&#x27;r&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;g&#x27;</span>, <span class="string">&#x27;b&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> color <span class="keyword">in</span> colors:</span><br><span class="line">    d[color] = d.get(color, <span class="number">0</span>) + <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 稍微潮点的方法，但有些坑需要注意，适合熟练的老手。</span></span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line">d = defaultdict(<span class="built_in">int</span>)</span><br><span class="line"><span class="keyword">for</span> color <span class="keyword">in</span> colors:</span><br><span class="line">    d[color] += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h3 id="用字典分组"><a href="#用字典分组" class="headerlink" title="用字典分组"></a>用字典分组</h3></li>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">names = [<span class="string">&#x27;raymond&#x27;</span>, <span class="string">&#x27;rachel&#x27;</span>, <span class="string">&#x27;matthew&#x27;</span>, <span class="string">&#x27;roger&#x27;</span>,</span><br><span class="line">       <span class="string">&#x27;betty&#x27;</span>, <span class="string">&#x27;melissa&#x27;</span>, <span class="string">&#x27;judith&#x27;</span>, <span class="string">&#x27;charlie&#x27;</span>]</span><br><span class="line">d = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> names:</span><br><span class="line">    key = <span class="built_in">len</span>(name)</span><br><span class="line">    <span class="keyword">if</span> key <span class="keyword">not</span> <span class="keyword">in</span> d:</span><br><span class="line">        d[key] = []</span><br><span class="line">    d[key].append(name)</span><br><span class="line"></span><br><span class="line">d = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> names:</span><br><span class="line">    key = <span class="built_in">len</span>(name)</span><br><span class="line">    d.setdefault(key, []).append(name)</span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">d = defaultdict(<span class="built_in">list</span>)</span><br><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> names:</span><br><span class="line">    key = <span class="built_in">len</span>(name)</span><br><span class="line">    d[key].append(name)</span><br></pre></td></tr></table></figure>
+<h3 id="连接字典"><a href="#连接字典" class="headerlink" title="连接字典"></a>连接字典</h3></li>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">defaults =  &#123;<span class="string">&#x27;color&#x27;</span>: <span class="string">&#x27;r&#x27;</span>, <span class="string">&#x27;user&#x27;</span>: <span class="string">&#x27;x&#x27;</span>&#125;</span><br><span class="line">parser = argparse.ArgumentParser()</span><br><span class="line">parser.add_argument(<span class="string">&#x27;-u&#x27;</span>, <span class="string">&#x27;--user&#x27;</span>)</span><br><span class="line">parser.add_argument(<span class="string">&#x27;-c&#x27;</span>, <span class="string">&#x27;--color&#x27;</span>)</span><br><span class="line">namespace = parser.parse_args([])</span><br><span class="line">command_line_args = &#123;k:v <span class="keyword">for</span> k, v <span class="keyword">in</span> <span class="built_in">vars</span>(namespace).items() <span class="keyword">if</span> v&#125;</span><br><span class="line"></span><br><span class="line">d = defaults.copy()</span><br><span class="line">d.update(os.environ)</span><br><span class="line">d.update(command_line_args)</span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> ChainMap</span><br><span class="line">d = ChainMap(command_line_args, os.environ, defaults)</span><br></pre></td></tr></table></figure>
+<h3 id="提高可读性"><a href="#提高可读性" class="headerlink" title="提高可读性"></a>提高可读性</h3></li>
+</ol>
+<ul>
+<li><p>位置参数和下标很漂亮</p>
+</li>
+<li><p>但关键字和名称更好</p>
+</li>
+<li><p>第一种方法对于计算机来说很便利</p>
+</li>
+<li><p>第二种方法和人类思考方式一致</p>
+</li>
+</ul>
+<ol>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">search(<span class="string">&#x27;@obama&#x27;</span>, <span class="literal">False</span>, <span class="number">20</span>, <span class="literal">True</span>)</span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">search(<span class="string">&#x27;@obama&#x27;</span>, retweets=<span class="literal">False</span>, numtweets=<span class="number">20</span>, popular=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p>第二种方法稍微(微秒级)慢一点，但为了代码的可读性和开发时间，值得。</p>
+</li>
+</ol>
+<h3 id="使用namedtuple提高多个返回值的可读性"><a href="#使用namedtuple提高多个返回值的可读性" class="headerlink" title="使用namedtuple提高多个返回值的可读性"></a>使用namedtuple提高多个返回值的可读性</h3><ol>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">doctest.testmod()</span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> namedtuple</span><br><span class="line">TestResults = namedTuple(<span class="string">&#x27;TestResults&#x27;</span>, [<span class="string">&#x27;failed&#x27;</span>, <span class="string">&#x27;attempted&#x27;</span>])</span><br></pre></td></tr></table></figure>
+<h3 id="unpack序列"><a href="#unpack序列" class="headerlink" title="unpack序列"></a>unpack序列</h3></li>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">p = <span class="string">&#x27;Raymond&#x27;</span>, <span class="string">&#x27;Hettinger&#x27;</span>, <span class="number">0x30</span>, <span class="string">&#x27;python@example.com&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 其它语言的常用方法/习惯</span></span><br><span class="line"></span><br><span class="line">fname = p[<span class="number">0</span>]</span><br><span class="line">lname = p[<span class="number">1</span>]</span><br><span class="line">age = p[<span class="number">2</span>]</span><br><span class="line">email = p[<span class="number">3</span>]</span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fname, lname, age, email = p</span><br></pre></td></tr></table></figure>
+<h3 id="更新多个变量的状态"><a href="#更新多个变量的状态" class="headerlink" title="更新多个变量的状态"></a>更新多个变量的状态</h3></li>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fibnacci</span>(<span class="params">n</span>):</span></span><br><span class="line">    x = <span class="number">0</span></span><br><span class="line">    y = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        print(x)</span><br><span class="line">        t = y</span><br><span class="line">        y = x + y</span><br><span class="line">        x = t</span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fibnacci</span>(<span class="params">n</span>):</span></span><br><span class="line">    x, y = <span class="number">0</span>, <span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n):</span><br><span class="line">        print(x)</span><br><span class="line">        x, y = y, x + y</span><br></pre></td></tr></table></figure>
+<p>第一种方法的问题</p>
+</li>
+</ol>
+<ul>
+<li><p>x和y是状态，状态应该在一次操作中更新，分几行的话状态会互相对不上，这经常是bug的源头。</p>
+</li>
+<li><p>操作有顺序要求</p>
+</li>
+<li><p>太底层太细节</p>
+</li>
+</ul>
+<p>第二种方法抽象层级更高，没有操作顺序出错的风险而且更效率更高。</p>
+<h3 id="连接字符串"><a href="#连接字符串" class="headerlink" title="连接字符串"></a>连接字符串</h3><ol>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">names = [<span class="string">&#x27;x&#x27;</span>, <span class="string">&#x27;y&#x27;</span>, <span class="string">&#x27;z&#x27;</span>]</span><br><span class="line">s = names[<span class="number">0</span>]</span><br><span class="line"><span class="keyword">for</span> name <span class="keyword">in</span> names[<span class="number">1</span>:]:</span><br><span class="line">    s += <span class="string">&#x27;,&#x27;</span> + name</span><br><span class="line">print(s)</span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">&#x27;,&#x27;</span>.join(names))</span><br></pre></td></tr></table></figure>
+<h3 id="更新序列"><a href="#更新序列" class="headerlink" title="更新序列"></a>更新序列</h3></li>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">names = [<span class="string">&#x27;x&#x27;</span>, <span class="string">&#x27;y&#x27;</span>, <span class="string">&#x27;z&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">del</span> names[<span class="number">0</span>]</span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> deque</span><br><span class="line">names = deque([<span class="string">&#x27;x&#x27;</span>, <span class="string">&#x27;y&#x27;</span>, <span class="string">&#x27;z&#x27;</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 用deque更有效率</span></span><br><span class="line"><span class="keyword">del</span> names[<span class="number">0</span>]</span><br><span class="line">names.popleft()</span><br><span class="line">names.appendleft(<span class="string">&#x27;mark&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="装饰器和上下文管理"><a href="#装饰器和上下文管理" class="headerlink" title="装饰器和上下文管理"></a>装饰器和上下文管理</h3></li>
+</ol>
+<ul>
+<li><p>用于把业务和管理的逻辑分开</p>
+</li>
+<li><p>分解代码和提高代码重用性的干净优雅的好工具</p>
+</li>
+<li><p>起个好名字很关键</p>
+</li>
+<li><p>记住蜘蛛侠的格言：能力越大，责任越大</p>
+</li>
+</ul>
+<h4 id="使用装饰器分离出管理逻辑"><a href="#使用装饰器分离出管理逻辑" class="headerlink" title="使用装饰器分离出管理逻辑"></a>使用装饰器分离出管理逻辑</h4><ol>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">web_lookup</span>(<span class="params">url, saved=&#123;&#125;</span>):</span></span><br><span class="line">    <span class="keyword">if</span> url <span class="keyword">in</span> saved:</span><br><span class="line">        <span class="keyword">return</span> saved[url]</span><br><span class="line"></span><br><span class="line">    page = urllib.urlopen(url).read()</span><br><span class="line">    saved[url] = page</span><br><span class="line">    <span class="keyword">return</span> page</span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@cache</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">web_lookup</span>(<span class="params">url</span>):</span></span><br><span class="line">    <span class="keyword">return</span> urllib.urlopen(url).read()</span><br></pre></td></tr></table></figure>
+<h4 id="分离临时上下文"><a href="#分离临时上下文" class="headerlink" title="分离临时上下文"></a>分离临时上下文</h4></li>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 保存旧的，创建新的</span></span><br><span class="line">old_context = getcontext().copy()</span><br><span class="line">getcontext().prec = <span class="number">50</span></span><br><span class="line">print(Decimal(<span class="number">355</span>) / Decimal(<span class="number">113</span>))</span><br><span class="line">setcontext(old_context)</span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> localcontext(Context(prec=<span class="number">50</span>)):</span><br><span class="line">    print(Decimal(<span class="number">355</span>) / Decimal(<span class="number">113</span>))</span><br></pre></td></tr></table></figure>
+<h4 id="如何打开关闭文件"><a href="#如何打开关闭文件" class="headerlink" title="如何打开关闭文件"></a>如何打开关闭文件</h4></li>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">f = <span class="built_in">open</span>(<span class="string">&#x27;data.txt&#x27;</span>)</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    data = f.read()</span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">    f.close()</span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;data.txt&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    data = f.read()</span><br></pre></td></tr></table></figure>
+<h4 id="如何使用锁"><a href="#如何使用锁" class="headerlink" title="如何使用锁"></a>如何使用锁</h4></li>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建锁</span></span><br><span class="line">lock = threading.Lock()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用锁的老方法</span></span><br><span class="line">lock.acquire()</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    print(<span class="string">&#x27;Section 1&#x27;</span>)</span><br><span class="line">    print(<span class="string">&#x27;Section 2&#x27;</span>)</span><br><span class="line"><span class="keyword">finally</span>:</span><br><span class="line">    lock.releae()</span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">lock = threading.Lock()</span><br><span class="line"><span class="keyword">with</span> lock:</span><br><span class="line">    print(<span class="string">&#x27;Section 1&#x27;</span>)</span><br><span class="line">    print(<span class="string">&#x27;Section 2&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="分离出临时的上下文"><a href="#分离出临时的上下文" class="headerlink" title="分离出临时的上下文"></a>分离出临时的上下文</h4></li>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    os.remove(<span class="string">&#x27;somefile.tmp&#x27;</span>)</span><br><span class="line"><span class="keyword">except</span> OSError:</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> ignore(OSError):</span><br><span class="line">    os.remove(<span class="string">&#x27;somefile.tmp&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="简洁的单句表达"><a href="#简洁的单句表达" class="headerlink" title="简洁的单句表达"></a>简洁的单句表达</h3></li>
+</ol>
+<h4 id="两个冲突的原则"><a href="#两个冲突的原则" class="headerlink" title="两个冲突的原则"></a>两个冲突的原则</h4><ul>
+<li><p>一行不要有太多逻辑</p>
+</li>
+<li><p>不要把单一的想法拆分成多个部分</p>
+</li>
+</ul>
+<h4 id="Raymond的原则"><a href="#Raymond的原则" class="headerlink" title="Raymond的原则"></a>Raymond的原则</h4><ul>
+<li>一行代码的逻辑等于一句自然语句</li>
+</ul>
+<h4 id="列表解析和生成器"><a href="#列表解析和生成器" class="headerlink" title="列表解析和生成器"></a>列表解析和生成器</h4><ol>
+<li><p>普通的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">result = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">    s = i ** <span class="number">2</span></span><br><span class="line">    result.append(s)</span><br><span class="line">print(<span class="built_in">sum</span>(result))</span><br></pre></td></tr></table></figure></li>
+<li><p>优雅的写法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="built_in">sum</span>(i ** <span class="number">2</span> <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n)))</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>原创技术分享，您的支持将鼓励我继续创作</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Javy WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="Javy Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/bigdata/parquet/" rel="prev" title="Parquet简介">
+      <i class="fa fa-chevron-left"></i> Parquet简介
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/leetcode/leetcode_sudoku_valid/" rel="next" title="验证数独是否有效">
+      验证数独是否有效 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E4%BD%A0%E7%9A%84Python%E4%BB%A3%E7%A0%81%E6%9B%B4%E4%BC%98%E9%9B%85"><span class="nav-number">1.</span> <span class="nav-text">使你的Python代码更优雅</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E4%B8%80%E4%B8%AA%E8%8C%83%E5%9B%B4%E7%9A%84%E6%95%B0%E5%AD%97"><span class="nav-number">1.1.</span> <span class="nav-text">遍历一个范围的数字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E4%B8%80%E4%B8%AA%E9%9B%86%E5%90%88"><span class="nav-number">1.2.</span> <span class="nav-text">遍历一个集合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E9%81%8D%E5%8E%86"><span class="nav-number">1.3.</span> <span class="nav-text">反向遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E4%B8%80%E4%B8%AA%E9%9B%86%E5%90%88%E5%8F%8A%E5%85%B6%E4%B8%8B%E6%A0%87"><span class="nav-number">1.4.</span> <span class="nav-text">遍历一个集合及其下标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E4%B8%A4%E4%B8%AA%E9%9B%86%E5%90%88"><span class="nav-number">1.5.</span> <span class="nav-text">遍历两个集合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%89%E5%BA%8F%E5%9C%B0%E9%81%8D%E5%8E%86"><span class="nav-number">1.6.</span> <span class="nav-text">有序地遍历</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%E7%9B%B4%E5%88%B0%E9%81%87%E5%88%B0%E6%A0%87%E8%AE%B0%E5%80%BC"><span class="nav-number">1.7.</span> <span class="nav-text">调用一个函数直到遇到标记值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E5%BE%AA%E7%8E%AF%E5%86%85%E8%AF%86%E5%88%AB%E5%A4%9A%E4%B8%AA%E9%80%80%E5%87%BA%E7%82%B9"><span class="nav-number">1.8.</span> <span class="nav-text">在循环内识别多个退出点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E5%AD%97%E5%85%B8%E7%9A%84key"><span class="nav-number">1.9.</span> <span class="nav-text">遍历字典的key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E4%B8%80%E4%B8%AA%E5%AD%97%E5%85%B8%E7%9A%84key%E5%92%8Cvalue"><span class="nav-number">1.10.</span> <span class="nav-text">遍历一个字典的key和value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8key-value%E5%AF%B9%E6%9E%84%E5%BB%BA%E5%AD%97%E5%85%B8"><span class="nav-number">1.11.</span> <span class="nav-text">用key-value对构建字典</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E5%AD%97%E5%85%B8%E8%AE%A1%E6%95%B0"><span class="nav-number">1.12.</span> <span class="nav-text">用字典计数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E5%AD%97%E5%85%B8%E5%88%86%E7%BB%84"><span class="nav-number">1.13.</span> <span class="nav-text">用字典分组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E5%AD%97%E5%85%B8"><span class="nav-number">1.14.</span> <span class="nav-text">连接字典</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%90%E9%AB%98%E5%8F%AF%E8%AF%BB%E6%80%A7"><span class="nav-number">1.15.</span> <span class="nav-text">提高可读性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8namedtuple%E6%8F%90%E9%AB%98%E5%A4%9A%E4%B8%AA%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E5%8F%AF%E8%AF%BB%E6%80%A7"><span class="nav-number">1.16.</span> <span class="nav-text">使用namedtuple提高多个返回值的可读性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#unpack%E5%BA%8F%E5%88%97"><span class="nav-number">1.17.</span> <span class="nav-text">unpack序列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E5%A4%9A%E4%B8%AA%E5%8F%98%E9%87%8F%E7%9A%84%E7%8A%B6%E6%80%81"><span class="nav-number">1.18.</span> <span class="nav-text">更新多个变量的状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9E%E6%8E%A5%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">1.19.</span> <span class="nav-text">连接字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0%E5%BA%8F%E5%88%97"><span class="nav-number">1.20.</span> <span class="nav-text">更新序列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8%E5%92%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E7%AE%A1%E7%90%86"><span class="nav-number">1.21.</span> <span class="nav-text">装饰器和上下文管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%A3%85%E9%A5%B0%E5%99%A8%E5%88%86%E7%A6%BB%E5%87%BA%E7%AE%A1%E7%90%86%E9%80%BB%E8%BE%91"><span class="nav-number">1.21.1.</span> <span class="nav-text">使用装饰器分离出管理逻辑</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%A6%BB%E4%B8%B4%E6%97%B6%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">1.21.2.</span> <span class="nav-text">分离临时上下文</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%89%93%E5%BC%80%E5%85%B3%E9%97%AD%E6%96%87%E4%BB%B6"><span class="nav-number">1.21.3.</span> <span class="nav-text">如何打开关闭文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E9%94%81"><span class="nav-number">1.21.4.</span> <span class="nav-text">如何使用锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%A6%BB%E5%87%BA%E4%B8%B4%E6%97%B6%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">1.21.5.</span> <span class="nav-text">分离出临时的上下文</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E6%B4%81%E7%9A%84%E5%8D%95%E5%8F%A5%E8%A1%A8%E8%BE%BE"><span class="nav-number">1.22.</span> <span class="nav-text">简洁的单句表达</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%A4%E4%B8%AA%E5%86%B2%E7%AA%81%E7%9A%84%E5%8E%9F%E5%88%99"><span class="nav-number">1.22.1.</span> <span class="nav-text">两个冲突的原则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Raymond%E7%9A%84%E5%8E%9F%E5%88%99"><span class="nav-number">1.22.2.</span> <span class="nav-text">Raymond的原则</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%97%E8%A1%A8%E8%A7%A3%E6%9E%90%E5%92%8C%E7%94%9F%E6%88%90%E5%99%A8"><span class="nav-number">1.22.3.</span> <span class="nav-text">列表解析和生成器</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Javy"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Javy</p>
+  <div class="site-description" itemprop="description">You can create art and beauty on a computer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/javyxu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;javyxu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018 - 2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javy</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'de44f4e91f73c590197c',
+      clientSecret: '840b907d657247c9ddcbcec968b641fda5d3b969',
+      repo        : 'javyxu.github.io',
+      owner       : 'javyxu',
+      admin       : ['javyxu'],
+      id          : '60d3627536a29ac642e0028040594336',
+      proxy       : 'https://netnr-proxy.cloudno.de/https://github.com/login/oauth/access_token',
+        language: 'en',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

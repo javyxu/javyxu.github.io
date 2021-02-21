@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"javyxu.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Docker与虚拟机Docker什么是DockerDocker是一个集开发、打包、运行应用于一体的开放式平台。Docker可以用来快速交付应用。使用Docker，你可以将应用程序从你的基础设施中分离出来，并将基础设施当做一个管理平台。Docker可以加快打包时间，加快测试，加快发布，缩短开发及运行代码之间的周期。Docker通过结合内核容器化特点和工作流，并使之工具化来实现这一切，帮助管理和发布你">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker与虚拟机">
+<meta property="og:url" content="https://javyxu.cn/linux/docker_virtualmachine/index.html">
+<meta property="og:site_name" content="Tech Blog">
+<meta property="og:description" content="Docker与虚拟机Docker什么是DockerDocker是一个集开发、打包、运行应用于一体的开放式平台。Docker可以用来快速交付应用。使用Docker，你可以将应用程序从你的基础设施中分离出来，并将基础设施当做一个管理平台。Docker可以加快打包时间，加快测试，加快发布，缩短开发及运行代码之间的周期。Docker通过结合内核容器化特点和工作流，并使之工具化来实现这一切，帮助管理和发布你">
+<meta property="og:locale">
+<meta property="og:image" content="https://javyxu.cn/linux/docker_virtualmachine/docker_virtualmachine/docker_architecture.png">
+<meta property="og:image" content="https://javyxu.cn/linux/docker_virtualmachine/docker_virtualmachine/vm_architecture.png">
+<meta property="article:published_time" content="2018-12-12T12:30:00.000Z">
+<meta property="article:modified_time" content="2021-02-21T02:37:33.306Z">
+<meta property="article:author" content="Javy">
+<meta property="article:tag" content="Docker、虚拟机">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://javyxu.cn/linux/docker_virtualmachine/docker_virtualmachine/docker_architecture.png">
+
+<link rel="canonical" href="https://javyxu.cn/linux/docker_virtualmachine/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>Docker与虚拟机 | Tech Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Tech Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Javy's Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-algorithm">
+
+    <a href="/algorithm/" rel="section"><i class="fa fa-code fa-fw"></i>Algorithm</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/javyxu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="https://javyxu.cn/linux/docker_virtualmachine/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Javy">
+      <meta itemprop="description" content="You can create art and beauty on a computer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Docker与虚拟机
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-12-12 20:30:00" itemprop="dateCreated datePublished" datetime="2018-12-12T20:30:00+08:00">2018-12-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-21 10:37:33" itemprop="dateModified" datetime="2021-02-21T10:37:33+08:00">2021-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Docker与虚拟机"><a href="#Docker与虚拟机" class="headerlink" title="Docker与虚拟机"></a>Docker与虚拟机</h2><h3 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h3><h4 id="什么是Docker"><a href="#什么是Docker" class="headerlink" title="什么是Docker"></a>什么是Docker</h4><p>Docker是一个集开发、打包、运行应用于一体的开放式平台。Docker可以用来快速交付应用。使用Docker，你可以将应用程序从你的基础设施中分离出来，并将基础设施当做一个管理平台。Docker可以加快打包时间，加快测试，加快发布，缩短开发及运行代码之间的周期。Docker通过结合内核容器化特点和工作流，并使之工具化来实现这一切，帮助管理和发布你的应用。</p>
+<h4 id="Docker的两个重要概念"><a href="#Docker的两个重要概念" class="headerlink" title="Docker的两个重要概念"></a>Docker的两个重要概念</h4><h5 id="镜像（Images）"><a href="#镜像（Images）" class="headerlink" title="镜像（Images）"></a>镜像（Images）</h5><p>Docker镜像是一个只读的模板。包含了容器运行时所需要的文件系统和一些参数。镜像是无状态的，也不会改变。镜像是用来创建容器的。你可以使用docker pull命令获取一个别人已创建好的镜像，或者使用dockerbuild来构建一个自己的镜像。</p>
+<h5 id="容器（Containers）"><a href="#容器（Containers）" class="headerlink" title="容器（Containers）"></a>容器（Containers）</h5><a id="more"></a>
+<p>Docker容器就像是一个文件夹，容器中包含了应用运行所需的一切。每个容器都是一个隔离的和安全的应用平台。容器是镜像的一个实例，它是有状态的，而且随时会改变，容器一般是短暂的。</p>
+<h4 id="Docker架构"><a href="#Docker架构" class="headerlink" title="Docker架构"></a>Docker架构</h4><p><img src="docker_virtualmachine/docker_architecture.png" alt="Docker架构"></p>
+<p>  <strong>说明：</strong></p>
+<p>  该图显示Docker虚拟化的架构：其中Docker Engine可以简单看成对Linux的NameSpace、Cgroup、镜像管理文件系统操作的封装。Docker并没有和虚拟机一样利用一个完全独立的Guest OS实现环境隔离，它利用的是目前linux内核本身支持的容器方式实现资源和环境隔离。简单的说，Docker是利用namespace实现系统环境的隔离；利用Cgroup实现资源限制；利用镜像实现根目录环境的隔离。</p>
+<h4 id="Docker-Engine"><a href="#Docker-Engine" class="headerlink" title="Docker Engine"></a>Docker Engine</h4><p>Docker Engine属于Docker的运行层。这是一套轻量化运行时及工具组合，负责管理容器、镜像、构建 等等。它以原生方式运行在Linux系统之上，并由以下元素构成：</p>
+<ul>
+<li><p>Docker Daemon，运行在主机计算机之上。</p>
+</li>
+<li><p>Docker Client，负责与Docker Daemon通信以执行命令。</p>
+</li>
+<li><p>REST API，用于同Docker Daemon远程交互。</p>
+</li>
+</ul>
+<p>现在详细介绍一下这三者：</p>
+<h5 id="Docker-Daemon"><a href="#Docker-Daemon" class="headerlink" title="Docker Daemon"></a>Docker Daemon</h5><p>Docker Daemon直接将执行命令发送至Docker Client——例如构建、运行以及分发等等。Docker Daemon运行在主机设备之上，但作为用户，我们永远不会直接与该Daemon进行通信。Docker Client也可以运行在主机设备上，但并非必需。它亦能够运行在另一台设备上，并与运行在目标主机上的Docker Daemon进行远程通信。</p>
+<h5 id="Docker-Client"><a href="#Docker-Client" class="headerlink" title="Docker Client"></a>Docker Client</h5><p>Docker Client是我们作为最终用户的通信对象。我们可以将其视为Docker的UI。</p>
+<p>我们进行的一切操作都将直接接入Docker Client，再由其将指令传递至Docker Daemon。</p>
+<h5 id="REST-API"><a href="#REST-API" class="headerlink" title="REST API"></a>REST API</h5><p>用于同Docker Daemon远程交互。</p>
+<h4 id="Docker可以做什么"><a href="#Docker可以做什么" class="headerlink" title="Docker可以做什么"></a>Docker可以做什么</h4><ul>
+<li><p>快速交付应用</p>
+</li>
+<li><p>便捷的部署和调整</p>
+</li>
+<li><p>高密集度，高负载</p>
+</li>
+</ul>
+<h3 id="虚拟机"><a href="#虚拟机" class="headerlink" title="虚拟机"></a>虚拟机</h3><h4 id="什么是虚拟机"><a href="#什么是虚拟机" class="headerlink" title="什么是虚拟机"></a>什么是虚拟机</h4><p>虚拟机在本质上就是在模拟一台真实的计算机设备，同时遵循同样的程序执行方式。虚拟机能够利用“虚拟机管理程序”运行在物理设备之上。反过来，虚拟机管理程序则可运行在主机设备或者“裸机”之上。</p>
+<p>传统的虚拟机需要模拟整台机器包括硬件，每台虚拟机都需要有自己的操作系统，虚拟机一旦被开启，预分配给他的资源将全部被占用。，每一个虚拟机包括应用，必要的二进制和库，以及一个完整的用户操作系统。</p>
+<h4 id="虚拟机架构"><a href="#虚拟机架构" class="headerlink" title="虚拟机架构"></a>虚拟机架构</h4><p><img src="docker_virtualmachine/vm_architecture.png" alt="虚拟机架构"></p>
+<p>  <strong>说明：</strong></p>
+<p>  该图展示虚拟机的架构，其中Guest OS层和Hypervisor层在docker中被Docker Engine层所替代。虚拟机的Guest OS即为虚拟机安装的操作系统，它是一个完整操作系统内核；虚拟机的Hypervisor层可以简单理解为一个硬件虚拟化平台，它在Host OS是以内核态的驱动存在的。</p>
+<p>  虚拟机实现资源隔离的方法是利用独立的OS，并利用Hypervisor虚拟化CPU、内存、IO设备等实现的。例如，为了虚拟CPU，Hypervisor会为每个虚拟的CPU创建一个数据结构，模拟CPU的全部寄存器的值，在适当的时候跟踪并修改这些值。需要指出的是在大多数情况下，虚拟机软件代码是直接跑在硬件上的，而不需要Hypervisor介入。只有在一些权限高的请求下，Guest OS需要运行内核态修改CPU的寄存器数据，Hypervisor会介入，修改并维护虚拟的CPU状态。</p>
+<p>  Hypervisor虚拟化内存的方法是创建一个shadow page table。正常的情况下，一个page table可以用来实现从虚拟内存到物理内存的翻译。在虚拟化的情况下，由于所谓的物理内存仍然是虚拟的，因此shadow page table就要做到：虚拟内存-&gt;虚拟的物理内存-&gt;真正的物理内存。</p>
+<p>  对于IO设备虚拟化，当Hypervisor接到page fault，并发现实际上虚拟的物理内存地址对应的是一个I/O设备，Hypervisor就用软件模拟这个设备的工作情况，并返回。比如当CPU想要写磁盘时，Hypervisor就把相应的数据写到一个host OS的文件上，这个文件实际上就模拟了虚拟的磁盘。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>Docker和虚拟机有各自擅长的领域，在软件开发、测试场景和生产运维场景中各有优劣</p>
+<ol>
+<li><p>Docker启动快速属于秒级别。虚拟机通常需要几分钟去启动。</p>
+</li>
+<li><p>Docker需要的资源更少，Docker在操作系统级别进行虚拟化，Docker容器和内核交互，几乎没有性能损耗，性能优于通过Hypervisor层与内核层的虚拟化。</p>
+</li>
+<li><p>Docker更轻量，Docker的架构可以共用一个内核与共享应用程序库，所占内存极小。同样的硬件环境，Docker运行的镜像数远多于虚拟机数量。对系统的利用率非常高。</p>
+</li>
+<li><p>与虚拟机相比，Docker隔离性更弱，Docker属于进程之间的隔离，虚拟机可实现系统级别隔离。</p>
+</li>
+<li><p>安全性：Docker的安全性也更弱。Docker的租户root和宿主机root等同，一旦容器内的用户从普通用户权限提升为root权限，它就直接具备了宿主机的root权限，进而可进行无限制的操作。虚拟机租户root权限和宿主机的root虚拟机权限是分离的，并且虚拟机利用如Intel的VT-d和VT-x的ring-1硬件隔离技术，这种隔离技术可以防止虚拟机突破和彼此交互，而容器至今还没有任何形式的硬件隔离，这使得容器容易受到攻击。</p>
+</li>
+<li><p>可管理性：Docker的集中化管理工具还不算成熟。各种虚拟化技术都有成熟的管理工具，例如VMware vCenter提供完备的虚拟机管理能力。</p>
+</li>
+<li><p>高可用和可恢复性：Docker对业务的高可用支持是通过快速重新部署实现的。虚拟化具备负载均衡、高可用、容错、迁移和数据保护等经过生产实践检验的成熟保障机制，VMware可承诺虚拟机99.999%高可用，保证业务连续性。</p>
+</li>
+<li><p>快速创建、删除：虚拟化创建是分钟级别的，Docker容器创建是秒级别的，Docker的快速迭代性，决定了无论是开发、测试、部署都可以节约大量时间。</p>
+</li>
+<li><p>交付、部署：虚拟机可以通过镜像实现环境交付的一致性，但镜像分发无法体系化；Docker在Dockerfile中记录了容器构建过程，可在集群中实现快速分发和快速部署。</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>原创技术分享，您的支持将鼓励我继续创作</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Javy WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="Javy Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Docker%E3%80%81%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag"># Docker、虚拟机</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/c++/struct_class/" rel="prev" title="C++中的结构体和类">
+      <i class="fa fa-chevron-left"></i> C++中的结构体和类
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/linux/centos_boot_space/" rel="next" title="CentOS使用yum update空间不足">
+      CentOS使用yum update空间不足 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E4%B8%8E%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">1.</span> <span class="nav-text">Docker与虚拟机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Docker"><span class="nav-number">1.1.</span> <span class="nav-text">Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFDocker"><span class="nav-number">1.1.1.</span> <span class="nav-text">什么是Docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker%E7%9A%84%E4%B8%A4%E4%B8%AA%E9%87%8D%E8%A6%81%E6%A6%82%E5%BF%B5"><span class="nav-number">1.1.2.</span> <span class="nav-text">Docker的两个重要概念</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%EF%BC%88Images%EF%BC%89"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">镜像（Images）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%B9%E5%99%A8%EF%BC%88Containers%EF%BC%89"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">容器（Containers）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker%E6%9E%B6%E6%9E%84"><span class="nav-number">1.1.3.</span> <span class="nav-text">Docker架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker-Engine"><span class="nav-number">1.1.4.</span> <span class="nav-text">Docker Engine</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Docker-Daemon"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">Docker Daemon</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Docker-Client"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">Docker Client</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#REST-API"><span class="nav-number">1.1.4.3.</span> <span class="nav-text">REST API</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Docker%E5%8F%AF%E4%BB%A5%E5%81%9A%E4%BB%80%E4%B9%88"><span class="nav-number">1.1.5.</span> <span class="nav-text">Docker可以做什么</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">1.2.</span> <span class="nav-text">虚拟机</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="nav-number">1.2.1.</span> <span class="nav-text">什么是虚拟机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E6%9E%B6%E6%9E%84"><span class="nav-number">1.2.2.</span> <span class="nav-text">虚拟机架构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.3.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Javy"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Javy</p>
+  <div class="site-description" itemprop="description">You can create art and beauty on a computer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/javyxu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;javyxu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018 - 2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javy</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'de44f4e91f73c590197c',
+      clientSecret: '840b907d657247c9ddcbcec968b641fda5d3b969',
+      repo        : 'javyxu.github.io',
+      owner       : 'javyxu',
+      admin       : ['javyxu'],
+      id          : 'e0bcabfa61522c27f63095e0171f21f5',
+      proxy       : 'https://netnr-proxy.cloudno.de/https://github.com/login/oauth/access_token',
+        language: 'en',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

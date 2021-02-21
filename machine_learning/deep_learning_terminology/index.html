@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"javyxu.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="你必须知道深度学习术语1. 神经元我们可以说，我们使用神经元来形成大脑的基本元素。也有助于形成神经网络的基本结构。当我们得到新信息时。我们开始生成一个输出。  同样，我们也要处理神经网络的情况。一旦神经元得到输入，我们就必须开始这个过程。此外，在处理之后生成输出。此外，我们必须发送神经元，这有助于进一步处理。或者，我们可以把它看作最终的输出。 2. 循环神经元(Recurrent Neuron)它">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你必须知道深度学习术语">
+<meta property="og:url" content="https://javyxu.cn/machine_learning/deep_learning_terminology/index.html">
+<meta property="og:site_name" content="Tech Blog">
+<meta property="og:description" content="你必须知道深度学习术语1. 神经元我们可以说，我们使用神经元来形成大脑的基本元素。也有助于形成神经网络的基本结构。当我们得到新信息时。我们开始生成一个输出。  同样，我们也要处理神经网络的情况。一旦神经元得到输入，我们就必须开始这个过程。此外，在处理之后生成输出。此外，我们必须发送神经元，这有助于进一步处理。或者，我们可以把它看作最终的输出。 2. 循环神经元(Recurrent Neuron)它">
+<meta property="og:locale">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/deep_learning_terminology/deep_learning_terminology/neuron.png">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/deep_learning_terminology/deep_learning_terminology/recurrent_neuron.png">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/deep_learning_terminology/deep_learning_terminology/pooling.png">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/deep_learning_terminology/deep_learning_terminology/padding.jpg">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/deep_learning_terminology/deep_learning_terminology/data_augmentation.png">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/deep_learning_terminology/deep_learning_terminology/softmax.png">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/deep_learning_terminology/deep_learning_terminology/input_output_hidden_layer.png">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/deep_learning_terminology/deep_learning_terminology/mlp.png">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/deep_learning_terminology/deep_learning_terminology/weights.png">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/deep_learning_terminology/deep_learning_terminology/activation_function.png">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/deep_learning_terminology/deep_learning_terminology/gradient_descent.png">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/deep_learning_terminology/deep_learning_terminology/learning_rate.png">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/deep_learning_terminology/deep_learning_terminology/dropout.jpeg">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/deep_learning_terminology/deep_learning_terminology/SGD.png">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/deep_learning_terminology/deep_learning_terminology/SGD_1.png">
+<meta property="article:published_time" content="2019-03-12T12:30:00.000Z">
+<meta property="article:modified_time" content="2021-02-21T02:37:33.306Z">
+<meta property="article:author" content="Javy">
+<meta property="article:tag" content="ML">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://javyxu.cn/machine_learning/deep_learning_terminology/deep_learning_terminology/neuron.png">
+
+<link rel="canonical" href="https://javyxu.cn/machine_learning/deep_learning_terminology/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>你必须知道深度学习术语 | Tech Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Tech Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Javy's Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-algorithm">
+
+    <a href="/algorithm/" rel="section"><i class="fa fa-code fa-fw"></i>Algorithm</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/javyxu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="https://javyxu.cn/machine_learning/deep_learning_terminology/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Javy">
+      <meta itemprop="description" content="You can create art and beauty on a computer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          你必须知道深度学习术语
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-03-12 20:30:00" itemprop="dateCreated datePublished" datetime="2019-03-12T20:30:00+08:00">2019-03-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-21 10:37:33" itemprop="dateModified" datetime="2021-02-21T10:37:33+08:00">2021-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine Learning</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="你必须知道深度学习术语"><a href="#你必须知道深度学习术语" class="headerlink" title="你必须知道深度学习术语"></a>你必须知道深度学习术语</h2><h3 id="1-神经元"><a href="#1-神经元" class="headerlink" title="1. 神经元"></a>1. 神经元</h3><p>我们可以说，我们使用神经元来形成大脑的基本元素。也有助于形成神经网络的基本结构。当我们得到新信息时。我们开始生成一个输出。</p>
+<p><img src="deep_learning_terminology/neuron.png" alt="Neuron"></p>
+<p>同样，我们也要处理神经网络的情况。一旦神经元得到输入，我们就必须开始这个过程。此外，在处理之后生成输出。此外，我们必须发送神经元，这有助于进一步处理。或者，我们可以把它看作最终的输出。</p>
+<h3 id="2-循环神经元-Recurrent-Neuron"><a href="#2-循环神经元-Recurrent-Neuron" class="headerlink" title="2. 循环神经元(Recurrent Neuron)"></a>2. 循环神经元(Recurrent Neuron)</h3><p>它是<a target="_blank" rel="noopener" href="https://data-flair.training/blogs/deep-learning-tutorial/">深度学习</a>术语中最好的术语之一。基本上，这个输出被发送回神经元以获取t时间戳。从下图可以看出，我们可以说输出作为输入返回了t次。同样，我们必须把不同的神经元连接起来，它们看起来就像一个展开的神经元。尽管如此，重要的是它为我们提供了一个更一般化的输出。<br><img src="deep_learning_terminology/recurrent_neuron.png" alt="Recurrent Neuron"></p>
+<h3 id="3-神经网络-Neural-Network"><a href="#3-神经网络-Neural-Network" class="headerlink" title="3. 神经网络(Neural Network)"></a>3. 神经网络(Neural Network)</h3><a id="more"></a>
+<p>神经网络是深度学习的基础。它的目标是找到一个未知函数的近似值。它是相互连接的神经元的组合。这些神经元有权重。此外，在网络训练期间需要根据错误更新偏差。激活函数对线性组合进行非线性变换。因此，生成输出。被激活神经元的组合给出了输出。</p>
+<h3 id="4-循环神经网络-Recurrent-Neural-Network"><a href="#4-循环神经网络-Recurrent-Neural-Network" class="headerlink" title="4. 循环神经网络(Recurrent Neural Network)"></a>4. 循环神经网络(Recurrent Neural Network)</h3><p>我们使用一个递归神经网络，特别是对序列数据。在这里，我们使用前面的输出来预测下一个输出。同样，在本例中，循环内部有一个网络。在一个隐藏的神经元中，循环具有存储信息的能力。因为它存储以前的单词来预测输出。</p>
+<p>同样，我们必须为t时间戳发送一个隐藏层的输出。此外，你可以看到展开的神经元是这样的。一旦神经元完成所有的时间戳，它就进入下一层。因此，我们可以说输出更加一般化。虽然，之前获取的信息会在很长一段时间后保留。</p>
+<p>此外，为了更新未展开网络的权值，我们必须再次传播误差。因此，称为时间反向传播(BPTT)。</p>
+<h3 id="5-梯度消失问题-Vanishing-Gradient-Problem"><a href="#5-梯度消失问题-Vanishing-Gradient-Problem" class="headerlink" title="5. 梯度消失问题(Vanishing Gradient Problem)"></a>5. 梯度消失问题(Vanishing Gradient Problem)</h3><p>它是深度学习术语中最好的术语之一。当激活函数非常小时，就会出现这个问题。在反向传播时，我们必须用低梯度乘权。尽管如此，如果它们深入到网络深处，就会变得很小，而且会消失。由于这个原因，神经网络忘记了长期依赖。同时，这也成为了一个神经网络的问题。因此，依赖对网络的记忆非常重要。</p>
+<p>我们使用激活函数来解决像ReLu这样没有小梯度的问题。</p>
+<h3 id="6-梯度爆炸性问题-Exploding-Gradient-Problem"><a href="#6-梯度爆炸性问题-Exploding-Gradient-Problem" class="headerlink" title="6. 梯度爆炸性问题(Exploding Gradient Problem)"></a>6. 梯度爆炸性问题(Exploding Gradient Problem)</h3><p>我们可以说这和消失梯度问题是相反的。不同的是激活函数太大。而且，它使特定节点的权重非常高。不过，我们可以通过剪切梯度来求解。这样它就不会超过某个值。</p>
+<h3 id="7-池化-Pooling"><a href="#7-池化-Pooling" class="headerlink" title="7. 池化(Pooling)"></a>7. 池化(Pooling)</h3><p>它是深度学习术语中最好的术语之一。我们可以在卷积层之间引入池化层。基本上，使用这个来减少参数的数量。尽管如此,防止过度学习。虽然，池的大小最常见的类型是过滤层的大小(2,2)使用MAX操作。更进一步，我们可以说它会做的是，它会取原始图像中每个4*4矩阵的最大值。<br><img src="deep_learning_terminology/pooling.png" alt="Pooling"></p>
+<p>我们也可以使用其他池的应用程序，如平均池等。</p>
+<h3 id="8-填充-Padding"><a href="#8-填充-Padding" class="headerlink" title="8. 填充(Padding)"></a>8. 填充(Padding)</h3><p>在这个过程中，我们必须在图像上添加一个额外的0层。因此，输出图像的大小与输入图像的大小相同。因此，称为填充。如果图像的像素是实际的或有效的，我们可以说它是有效的填充。</p>
+<p><img src="deep_learning_terminology/padding.jpg" alt="Padding"></p>
+<h3 id="9-数据增强-Data-Augmentation"><a href="#9-数据增强-Data-Augmentation" class="headerlink" title="9. 数据增强(Data Augmentation)"></a>9. 数据增强(Data Augmentation)</h3><p>它是指从给定的数据中添加新的数据，这些数据可能被证明对预测是有益的。</p>
+<p><strong>例如:</strong> 假设我们有一个数字“9”。我们也可以改变它的认知。但如果它在旋转或倾斜。因此，旋转有助于提高模型的精度。尽管如此，我们通过旋转来提高数据的质量。因此，需要数据扩充。</p>
+<p><img src="deep_learning_terminology/data_augmentation.png" alt="Data Augmentation"></p>
+<h3 id="10-分类器-Softmax"><a href="#10-分类器-Softmax" class="headerlink" title="10. 分类器(Softmax)"></a>10. 分类器(Softmax)</h3><p>我们使用输出层中的softmax激活函数来处理分类问题。它就像一个sigmoid函数。另外，不同之处在于输出是标准化的，总和为1。</p>
+<p>它类似于sigmoid函数，唯一的区别是输出是标准化的，加起来等于1。如果我们有一个二进制输出，sigmoid函数就会工作。但我们也有一个多类分类的问题。在这个过程中，softmax可以很容易地为每个类分配值。同样，这也可以解释为概率。</p>
+<p>这样看很容易——假设你要识别一个6，它看起来也有点像8。函数将为每个数字赋值，如下所示。我们可以很容易地看到，最高的概率被分配到6，其次是最高的分配到8，以此类推……</p>
+<p><img src="deep_learning_terminology/softmax.png" alt="Softmax"></p>
+<h3 id="11-输入-输出-隐藏层-Input-layer-Output-layer-Hidden-layer"><a href="#11-输入-输出-隐藏层-Input-layer-Output-layer-Hidden-layer" class="headerlink" title="11. 输入/输出/隐藏层(Input layer/ Output layer / Hidden layer"></a>11. 输入/输出/隐藏层(Input layer/ Output layer / Hidden layer</h3><p>)<br>它是深度学习术语中最好的术语之一。输入层是接收输入的层。而且，它是网络的第一层。输出层是网络的最后一层。这些层是网络的隐藏层。我们使用这些隐藏层对传入的数据执行任务。因此，将生成的输出传递到下一层。尽管这两个层都是可见的，但是中间层是隐藏的。</p>
+<p><img src="deep_learning_terminology/input_output_hidden_layer.png" alt="Input layer/ Output layer / Hidden layer"></p>
+<h3 id="12-多层感知器-Multi-Layer-perceptron"><a href="#12-多层感知器-Multi-Layer-perceptron" class="headerlink" title="12. 多层感知器(Multi-Layer perceptron)"></a>12. 多层感知器(Multi-Layer perceptron)</h3><p>我们不能用一个神经元来完成高度复杂的任务。因此，我们使用神经元堆栈来生成所需的输出。在最简单的网络中，我们有一个输入层、一个隐藏层和一个输出层。在这里，每一层都有多个神经元。此外，在每一层，所有的神经元都连接到下一层的所有神经元。这些网络是完全连接的网络。</p>
+<p><img src="deep_learning_terminology/mlp.png" alt="MLP"></p>
+<h3 id="13-权重-Weights"><a href="#13-权重-Weights" class="headerlink" title="13. 权重(Weights)"></a>13. 权重(Weights)</h3><p>一旦输入进入神经元，我们就必须把它乘以权重。</p>
+<p><strong>例如:</strong> 如果一个神经元有两个输入，那么我们必须给每个输入分配一个相关的权重。此外，我们必须随机初始化权重。此外，在模型训练过程中，这些权重也在不断更新。虽然，在培训之后，我们必须给输入分配更高的权重。</p>
+<p>假设输入为a，然后将权重关联到W1。然后通过节点后，输入变为*W1</p>
+<p><img src="deep_learning_terminology/weights.png" alt="Weights"></p>
+<h3 id="14-偏差-Bias"><a href="#14-偏差-Bias" class="headerlink" title="14. 偏差(Bias)"></a>14. 偏差(Bias)</h3><p>除了权值，我们还需要加入另一个线性分量，这是偏差。在输入中，我们要加上权重乘法。基本上，我们必须添加偏差来改变权重乘以输入的范围。只要添加了偏差，结果就像*W1+偏差。因此，它是输入变换的一个线性分量。</p>
+<h3 id="15-激活函数-Activation-Function"><a href="#15-激活函数-Activation-Function" class="headerlink" title="15. 激活函数(Activation Function)"></a>15. 激活函数(Activation Function)</h3><p><img src="deep_learning_terminology/activation_function.png" alt="Activation Function"></p>
+<p>只要我们对输入应用线性分量，就会对它应用非线性函数。这是通过将激活函数应用于线性组合来实现的。因此，它将输入信号转换为输出信号。<br>应用激活函数后的输出将类似于f(a*W1+b)，其中f()是激活函数。<br>在下面的图中，我们有n个输入，从X1到Xn，对应的权重是Wk1到Wkn。我们有一个给定的偏置bk，首先，我们必须将权重乘以它对应的输入。然后把这些和偏置一起加起来。设为u。</p>
+<p><code>u =∑w * x + b</code></p>
+<p>因此，激活函数需要作用于u即f(u)上，我们从神经元接收到的最终输出为yk = f(u)</p>
+<h3 id="16-梯度下降-Gradient-Descent"><a href="#16-梯度下降-Gradient-Descent" class="headerlink" title="16. 梯度下降(Gradient Descent)"></a>16. 梯度下降(Gradient Descent)</h3><p>我们将其作为最小化成本的优化算法。</p>
+<p>从数学上讲，要找到一个函数的局部最小值，需要采取与函数梯度负相关的步骤。<br><img src="deep_learning_terminology/gradient_descent.png" alt="Gradient Descent"></p>
+<h3 id="17-学习率"><a href="#17-学习率" class="headerlink" title="17. 学习率"></a>17. 学习率</h3><p><img src="deep_learning_terminology/learning_rate.png" alt="Learning Rate"></p>
+<p>我们可以说它是每次迭代中代价函数的最小值。此外，在选择学习速度时必须谨慎。因为最优解不应该很大。同样，也不应该低到网络永远收敛。</p>
+<h3 id="18-反向传播-Backpropagation"><a href="#18-反向传播-Backpropagation" class="headerlink" title="18. 反向传播(Backpropagation)"></a>18. 反向传播(Backpropagation)</h3><p>当我们想要定义一个神经网络时，我们给节点分配随机的权重和偏差值。同样，当我们收到单个迭代的输出时。因此，我们可以计算网络的误差。</p>
+<p>在反向传播过程中，网络的运动是反向的，误差随梯度从外层流向隐层，并对权值进行更新。</p>
+<h3 id="19-批次-Batches"><a href="#19-批次-Batches" class="headerlink" title="19. 批次(Batches)"></a>19. 批次(Batches)</h3><p>在神经网络训练中，我们将输入随机分成若干大小相等的块。而不是一次性发送全部输入。此外，经过训练的数据批使模型更加一般化。</p>
+<h3 id="20-周期-Epochs"><a href="#20-周期-Epochs" class="headerlink" title="20. 周期(Epochs)"></a>20. 周期(Epochs)</h3><p>我们可以将它定义为一个单一的培训迭代。然后在转发和反向传播中使用批来定义。这意味着1周期是整个输入数据的单次向前和向后传递。</p>
+<h3 id="21-丢弃-Dropout"><a href="#21-丢弃-Dropout" class="headerlink" title="21. 丢弃(Dropout)"></a>21. 丢弃(Dropout)</h3><p>Dropout是一种正则化技术，可防止网络过度拟合套。顾名思义，在训练期间，隐藏层中的一定数量的神经元被随机地丢弃。这意味着训练发生在神经网络的不同组合的神经网络的几个架构上。你可以将Dropout视为一种综合技术，然后将多个网络的输出用于产生最终输出。<br><img src="deep_learning_terminology/dropout.jpeg" alt="Dropout"></p>
+<h3 id="22-批量归一化-Batch-Normalization"><a href="#22-批量归一化-Batch-Normalization" class="headerlink" title="22. 批量归一化(Batch Normalization)"></a>22. 批量归一化(Batch Normalization)</h3><p>作为一个概念，批量归一化可以被认为是我们在河流中设定为特定检查点的水坝。这样做是为了确保数据的分发与希望获得的下一层相同。当我们训练神经网络时，权重在梯度下降的每个步骤之后都会改变，这会改变数据的形状如何发送到下一层。</p>
+<p><img src="deep_learning_terminology/SGD.png" alt="SGD"></p>
+<p>但是下一层预期分布类似于之前所看到的分布。 所以我们在将数据发送到下一层之前明确规范化数据。</p>
+<p><img src="deep_learning_terminology/SGD_1.png" alt="SGD1"></p>
+<p>所以，这都是关于深度学习的术语。希望你喜欢我们的解释。</p>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>因此，我们看到了深度学习术语。这将有助于理解复杂的神经网络和深度学习术语。我们有深入学习术语的图片，可以让你更好地理解这一点。此外，如果您对深度学习术语有任何疑问，请在评论部分提出。</p>
+<p><em>原文请看此处：<br><a target="_blank" rel="noopener" href="https://medium.com/@rinu.gour123/you-must-know-20-deep-learning-terminologies-d164ff027bac">You Must Know 20 Deep Learning Terminologies</a></em></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>原创技术分享，您的支持将鼓励我继续创作</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Javy WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="Javy Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ML/" rel="tag"># ML</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/machine_learning/top_10_machine_learning_algorithms/" rel="prev" title="十大机器学习算法简介">
+      <i class="fa fa-chevron-left"></i> 十大机器学习算法简介
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/leetcode/leetcode_reverse_integer/" rel="next" title="整数反转">
+      整数反转 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%A0%E5%BF%85%E9%A1%BB%E7%9F%A5%E9%81%93%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%9C%AF%E8%AF%AD"><span class="nav-number">1.</span> <span class="nav-text">你必须知道深度学习术语</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%A5%9E%E7%BB%8F%E5%85%83"><span class="nav-number">1.1.</span> <span class="nav-text">1. 神经元</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E5%85%83-Recurrent-Neuron"><span class="nav-number">1.2.</span> <span class="nav-text">2. 循环神经元(Recurrent Neuron)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-Neural-Network"><span class="nav-number">1.3.</span> <span class="nav-text">3. 神经网络(Neural Network)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-Recurrent-Neural-Network"><span class="nav-number">1.4.</span> <span class="nav-text">4. 循环神经网络(Recurrent Neural Network)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%A2%AF%E5%BA%A6%E6%B6%88%E5%A4%B1%E9%97%AE%E9%A2%98-Vanishing-Gradient-Problem"><span class="nav-number">1.5.</span> <span class="nav-text">5. 梯度消失问题(Vanishing Gradient Problem)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%A2%AF%E5%BA%A6%E7%88%86%E7%82%B8%E6%80%A7%E9%97%AE%E9%A2%98-Exploding-Gradient-Problem"><span class="nav-number">1.6.</span> <span class="nav-text">6. 梯度爆炸性问题(Exploding Gradient Problem)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E6%B1%A0%E5%8C%96-Pooling"><span class="nav-number">1.7.</span> <span class="nav-text">7. 池化(Pooling)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E5%A1%AB%E5%85%85-Padding"><span class="nav-number">1.8.</span> <span class="nav-text">8. 填充(Padding)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E6%95%B0%E6%8D%AE%E5%A2%9E%E5%BC%BA-Data-Augmentation"><span class="nav-number">1.9.</span> <span class="nav-text">9. 数据增强(Data Augmentation)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-%E5%88%86%E7%B1%BB%E5%99%A8-Softmax"><span class="nav-number">1.10.</span> <span class="nav-text">10. 分类器(Softmax)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#11-%E8%BE%93%E5%85%A5-%E8%BE%93%E5%87%BA-%E9%9A%90%E8%97%8F%E5%B1%82-Input-layer-Output-layer-Hidden-layer"><span class="nav-number">1.11.</span> <span class="nav-text">11. 输入&#x2F;输出&#x2F;隐藏层(Input layer&#x2F; Output layer &#x2F; Hidden layer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#12-%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E5%99%A8-Multi-Layer-perceptron"><span class="nav-number">1.12.</span> <span class="nav-text">12. 多层感知器(Multi-Layer perceptron)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#13-%E6%9D%83%E9%87%8D-Weights"><span class="nav-number">1.13.</span> <span class="nav-text">13. 权重(Weights)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#14-%E5%81%8F%E5%B7%AE-Bias"><span class="nav-number">1.14.</span> <span class="nav-text">14. 偏差(Bias)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#15-%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0-Activation-Function"><span class="nav-number">1.15.</span> <span class="nav-text">15. 激活函数(Activation Function)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#16-%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D-Gradient-Descent"><span class="nav-number">1.16.</span> <span class="nav-text">16. 梯度下降(Gradient Descent)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#17-%E5%AD%A6%E4%B9%A0%E7%8E%87"><span class="nav-number">1.17.</span> <span class="nav-text">17. 学习率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#18-%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD-Backpropagation"><span class="nav-number">1.18.</span> <span class="nav-text">18. 反向传播(Backpropagation)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#19-%E6%89%B9%E6%AC%A1-Batches"><span class="nav-number">1.19.</span> <span class="nav-text">19. 批次(Batches)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#20-%E5%91%A8%E6%9C%9F-Epochs"><span class="nav-number">1.20.</span> <span class="nav-text">20. 周期(Epochs)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#21-%E4%B8%A2%E5%BC%83-Dropout"><span class="nav-number">1.21.</span> <span class="nav-text">21. 丢弃(Dropout)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#22-%E6%89%B9%E9%87%8F%E5%BD%92%E4%B8%80%E5%8C%96-Batch-Normalization"><span class="nav-number">1.22.</span> <span class="nav-text">22. 批量归一化(Batch Normalization)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">1.23.</span> <span class="nav-text">结论</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Javy"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Javy</p>
+  <div class="site-description" itemprop="description">You can create art and beauty on a computer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/javyxu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;javyxu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018 - 2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javy</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'de44f4e91f73c590197c',
+      clientSecret: '840b907d657247c9ddcbcec968b641fda5d3b969',
+      repo        : 'javyxu.github.io',
+      owner       : 'javyxu',
+      admin       : ['javyxu'],
+      id          : '53b167e4b0831e75da1063c06f6f654a',
+      proxy       : 'https://netnr-proxy.cloudno.de/https://github.com/login/oauth/access_token',
+        language: 'en',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

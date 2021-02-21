@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"javyxu.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="基本数据结构 目标 什么是线性数据结构 什么是栈 栈的抽象数据类型 Python实现栈 中缀，前缀和后缀表达式     基本数据结构目标 理解抽象数据类型的栈，队列，deque 和列表。 能够使用 Python 列表实现 ADT 堆栈，队列和 deque。 了解基本线性数据结构实现的性能。 了解前缀，中缀和后缀表达式格式。 使用栈来实现后缀表达式。 使用栈将表达式从中缀转换为后缀。 使用队列">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基本数据结构">
+<meta property="og:url" content="https://javyxu.cn/data_structure/base_data_structure/index.html">
+<meta property="og:site_name" content="Tech Blog">
+<meta property="og:description" content="基本数据结构 目标 什么是线性数据结构 什么是栈 栈的抽象数据类型 Python实现栈 中缀，前缀和后缀表达式     基本数据结构目标 理解抽象数据类型的栈，队列，deque 和列表。 能够使用 Python 列表实现 ADT 堆栈，队列和 deque。 了解基本线性数据结构实现的性能。 了解前缀，中缀和后缀表达式格式。 使用栈来实现后缀表达式。 使用栈将表达式从中缀转换为后缀。 使用队列">
+<meta property="og:locale">
+<meta property="og:image" content="https://javyxu.cn/data_structure/base_data_structure/base_data_structure/figure_1.png">
+<meta property="og:image" content="https://javyxu.cn/data_structure/base_data_structure/base_data_structure/figure_2.png">
+<meta property="og:image" content="https://javyxu.cn/data_structure/base_data_structure/base_data_structure/figure_3.png">
+<meta property="og:image" content="https://javyxu.cn/data_structure/base_data_structure/base_data_structure/table1.png">
+<meta property="article:published_time" content="2021-02-21T02:37:33.302Z">
+<meta property="article:modified_time" content="2021-02-21T02:37:33.302Z">
+<meta property="article:author" content="Javy">
+<meta property="article:tag" content="数据结构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://javyxu.cn/data_structure/base_data_structure/base_data_structure/figure_1.png">
+
+<link rel="canonical" href="https://javyxu.cn/data_structure/base_data_structure/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>基本数据结构 | Tech Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Tech Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Javy's Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-algorithm">
+
+    <a href="/algorithm/" rel="section"><i class="fa fa-code fa-fw"></i>Algorithm</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/javyxu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="https://javyxu.cn/data_structure/base_data_structure/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Javy">
+      <meta itemprop="description" content="You can create art and beauty on a computer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          基本数据结构
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-02-21 10:37:33" itemprop="dateCreated datePublished" datetime="2021-02-21T10:37:33+08:00">2021-02-21</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <!-- TOC -->
+
+<ul>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">基本数据结构</a><ul>
+<li><a href="#%E7%9B%AE%E6%A0%87">目标</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%BF%E6%80%A7%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">什么是线性数据结构</a></li>
+<li><a href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%A0%88">什么是栈</a></li>
+<li><a href="#%E6%A0%88%E7%9A%84%E6%8A%BD%E8%B1%A1%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B">栈的抽象数据类型</a></li>
+<li><a href="#python%E5%AE%9E%E7%8E%B0%E6%A0%88">Python实现栈</a></li>
+<li><a href="#%E4%B8%AD%E7%BC%80%E5%89%8D%E7%BC%80%E5%92%8C%E5%90%8E%E7%BC%80%E8%A1%A8%E8%BE%BE%E5%BC%8F">中缀，前缀和后缀表达式</a></li>
+</ul>
+</li>
+</ul>
+<!-- /TOC -->
+<h2 id="基本数据结构"><a href="#基本数据结构" class="headerlink" title="基本数据结构"></a>基本数据结构</h2><h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><ul>
+<li>理解抽象数据类型的栈，队列，deque 和列表。</li>
+<li>能够使用 Python 列表实现 ADT 堆栈，队列和 deque。</li>
+<li>了解基本线性数据结构实现的性能。</li>
+<li>了解前缀，中缀和后缀表达式格式。</li>
+<li>使用栈来实现后缀表达式。</li>
+<li>使用栈将表达式从中缀转换为后缀。</li>
+<li>使用队列进行基本时序仿真。</li>
+<li>能够识别问题中栈，队列和 deques 数据结构的适当使用。</li>
+<li>能够使用节点和引用将抽象数据类型列表实现为链表。</li>
+<li>能够比较我们的链表实现与 Python 的列表实现的性能。<a id="more"></a>
+<h3 id="什么是线性数据结构"><a href="#什么是线性数据结构" class="headerlink" title="什么是线性数据结构"></a>什么是线性数据结构</h3>我们从四个简单但重要的概念开始研究数据结构。栈，队列，deques, 列表是一类数据的容器，它们数据项之间的顺序由添加或删除的顺序决定。一旦一个数据项被添加，它相对于前后元素一直保持该位置不变。诸如此类的数据结构被称为线性数据结构。</li>
+</ul>
+<p>线性数据结构有两端，有时被称为左右，某些情况被称为前后。你也可以称为顶部和底部，名字都不重要。将两个线性数据结构区分开的方法是添加和移除项的方式，特别是添加和移除项的位置。例如一些结构允许从一端添加项，另一些允许从另一端移除项。</p>
+<p>这些变种的形式产生了计算机科学最有用的数据结构。他们出现在各种算法中，并可以用于解决很多重要的问题。</p>
+<h3 id="什么是栈"><a href="#什么是栈" class="headerlink" title="什么是栈"></a>什么是栈</h3><p><strong>栈</strong>（有时称为“后进先出栈”）是一个项的有序集合，其中添加移除新项总发生在同一端。这一端通常称为“顶部”。与顶部对应的端称为“底部”。</p>
+<p>栈的底部很重要，因为在栈中靠近底部的项是存储时间最长的。最近添加的项是最先会被移除的。这种排序原则有时被称为<strong>LIFO</strong>，后进先出。它基于在集合内的时间长度做排序。较新的项靠近顶部，较旧的项靠近底部。</p>
+<p>栈的例子很常见。几乎所有的自助餐厅都有一堆托盘或盘子，你从顶部拿一个，就会有一个新的托盘给下一个客人。想象桌上有一堆书(Figure 1), 只有顶部的那本书封面可见，要看到其他书的封面，只有先移除他们上面的书。Figure 2展示了另一个栈，包含了很多按Python对象。<br><img src="base_data_structure/figure_1.png" alt="figure1">Figure 1<br><img src="base_data_structure/figure_2.png" alt="figure2">Figure 2</p>
+<p>和栈相关的最有用的想法之一来自对它的观察。假设从一个干净的桌面开始，现在把书一本本叠起来，你在构造一个栈。考虑下移除一本书会发生什么。移除的顺序跟刚刚被放置的顺序相反。栈之所以重要是因为它能反转项的顺序。插入跟删除顺序相反，Figure 3展示了Python数据对象创建和删除的过程，注意观察他们的顺序。<br><img src="base_data_structure/figure_3.png" alt="figure3">Figure 3</p>
+<p>想想这种反转的属性，你可以想到使用计算机的时候所碰到的例子。例如，每个 web 浏览器都有一个返回按钮。当你浏览网页时，这些网页被放置在一个栈中（实际是网页的网址）。你现在查看的网页在顶部，你第一个查看的网页在底部。如果按‘返回’按钮，将按相反的顺序浏览刚才的页面。</p>
+<h3 id="栈的抽象数据类型"><a href="#栈的抽象数据类型" class="headerlink" title="栈的抽象数据类型"></a>栈的抽象数据类型</h3><p>栈的抽象数据类型由以下结构和操作定义。如上所述，栈被构造为项的有序集合，其中项被添加和从末端移除的位置称为“顶部”。<strong>栈是有序的LIFO</strong>。栈操作如下。</p>
+<ul>
+<li>Stack() 创建一个空的新栈。 它不需要参数，并返回一个空栈。</li>
+<li> push(item)将一个新项添加到栈的顶部。它需要 item 做参数并不返回任何内容。</li>
+<li> pop() 从栈中删除顶部项。它不需要参数并返回 item 。栈被修改。</li>
+<li> peek() 从栈返回顶部项，但不会删除它。不需要参数。 不修改栈。</li>
+<li> isEmpty() 测试栈是否为空。不需要参数，并返回布尔值。</li>
+<li> size() 返回栈中的 item 数量。不需要参数，并返回一个整数。</li>
+</ul>
+<p>例如，s是已经创建的空栈，Table1展示了栈操作序列的结果。栈中，顶部项列在最右边。<br><img src="base_data_structure/table1.png" alt="table1">Table 1</p>
+<h3 id="Python实现栈"><a href="#Python实现栈" class="headerlink" title="Python实现栈"></a>Python实现栈</h3><p>现在我们已经将栈清楚地定义了抽象数据类型，我们将把注意力转向使用Python实现栈。回想一下，当我们给抽象数据类型一个物理实现时，我们将实现称为数据结构。<br>正如我们在第1章中所描述的，在Python中，与任何面向对象编程语言一样，抽象数据类型（如栈）的选择的实现是创建一个新类。栈操作实现为类的方法。此外，为了实现作为元素集合的栈，使用由Python提供的原语集合的能力是有意义的。我们将使用列表作为底层实现。<br>回想一下，Python中的列表类提供了有序集合机制和一组方法。例如，如果我们有列表<code>[2,5,3,6,7,4]</code>，我们只需要确定列表的哪一端将被认为是栈的顶部。一旦确定，可以使用诸如<strong>append</strong>和<strong>pop</strong>的列表方法来实现操作。<br>以下栈实现（ActiveCode 1）假定列表的结尾将保存栈的顶部元素。随着栈增长（<strong>push</strong>操作），新项将被添加到列表的末尾。<strong>pop</strong>也操作列表末尾的元素。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Stack</span>:</span></span><br><span class="line">     <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">         self.items = []</span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">def</span> <span class="title">isEmpty</span>(<span class="params">self</span>):</span></span><br><span class="line">         <span class="keyword">return</span> self.items == []</span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">def</span> <span class="title">push</span>(<span class="params">self, item</span>):</span></span><br><span class="line">         self.items.append(item)</span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">def</span> <span class="title">pop</span>(<span class="params">self</span>):</span></span><br><span class="line">         <span class="keyword">return</span> self.items.pop()</span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">def</span> <span class="title">peek</span>(<span class="params">self</span>):</span></span><br><span class="line">         <span class="keyword">return</span> self.items[<span class="built_in">len</span>(self.items)-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">def</span> <span class="title">size</span>(<span class="params">self</span>):</span></span><br><span class="line">         <span class="keyword">return</span> <span class="built_in">len</span>(self.items)</span><br></pre></td></tr></table></figure>
+<p>ActiveCode 1<br>记住我们只定义类的实现，我们需要创建一个栈，然后使用它。ActiveCode 2展示了我们通过实例化<code>Stack</code>类执行Table 1中的操作。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">s=Stack()</span><br><span class="line"></span><br><span class="line">print(s.isEmpty())</span><br><span class="line">s.push(<span class="number">4</span>)</span><br><span class="line">s.push(<span class="string">&#x27;dog&#x27;</span>)</span><br><span class="line">print(s.peek())</span><br><span class="line">s.push(<span class="literal">True</span>)</span><br><span class="line">print(s.size())</span><br><span class="line">print(s.isEmpty())</span><br><span class="line">s.push(<span class="number">8.4</span>)</span><br><span class="line">print(s.pop())</span><br><span class="line">print(s.pop())</span><br><span class="line">print(s.size())</span><br></pre></td></tr></table></figure>
+<p>ActiveCode 2</p>
+<h3 id="中缀，前缀和后缀表达式"><a href="#中缀，前缀和后缀表达式" class="headerlink" title="中缀，前缀和后缀表达式"></a>中缀，前缀和后缀表达式</h3><p>当你编写一个算术表达式如<code>B*C</code>时，表达式的形式使你能够正确理解它。在这种情况下，你知道<strong>B</strong>乘以<strong>C</strong>, 因为乘法运算符<code>*</code>出现在表达式中。这种类型的符号称为中缀，因为运算符在它处理的两个操作数之间。看另外一个中缀示例，<code>A+B*C</code>，运算符<code>+</code>和<code>*</code>仍然出现在操作数之间。这里面有个问题是，他们分别作用于哪个运算数上，<code>+</code>作用于<code>A</code>和<code>B</code>, 还是<code>*</code>作用于B和C？表达式似乎有点模糊。</p>
+<p>事实上，你已经读写过这些类型的表达式很长一段时间，所以它们对你不会导致什么问题。这是因为你知道运算符<code>+</code>和<code>*</code>。每个运算符都有一个优先级。优先级较高的运算符在优先级较低的运算符之前使用。唯一改变顺序的是括号的存在。算术运算符的优先顺序是将乘法和除法置于加法和减法之上。如果出现具有相等优先级的两个运算符，则使用从左到右的顺序排序或关联。</p>
+<p>我们使用运算符优先级来解释下表达式<code>A+B*C</code>。<strong>B</strong>和<strong>C</strong>首先相乘，然后将A与该结果相加。<code>(A+B)*C</code>将强制在乘法之前执行A和B的加法。在表达式<code>A+B+C</code>中，最左边的<code>+</code>首先使用。</p>
+<p>虽然这一切对你来说都很明显。但请记住，计算机需要准确知道要执行的操作符和顺序。一种保证不会对操作顺序产生混淆的表达式的方法是创建一个称为完全括号表达式的表达式。这种类型的表达式对每个运算符都使用一对括号。括号没有歧义的指示操作的顺序。也没有必要记住任何优先规则。<br>表达式<code>A+B*C+D</code>可以重写为 <code>((A + (B * C)) + D)</code> ，表明先乘法，然后是左边的加法，<code>A + B + C + D</code>可以写为<code>(((A + B) + C) + D)</code>，因为加法操作从左向右相关联。</p>
+<p>有两种非常重要的表达式格式，你可能一开始不会很明显的看出来。中缀表达式<code>A+B</code>, 如果我们移动两个操作数之间的运算符会发生什么？结果表达式变成<code>+ A B</code>。同样，我们也可以将运算符移动到结尾，得到<code>A B +</code>，这样看起来有点奇怪。</p>
+<p>改变操作符的位置得到了两种新的表达式格式，前缀和后缀。前缀表达式符号要求所有运算符在它们处理的两个操作数之前。另一个方面，后缀要求其操作符在相应的操作数之后。看下更多的例子 (见 Table 2)<br>A+B*C 将在前缀中写为 + A * B C 。乘法运算符紧接在操作数 B 和 C 之前，表示 * 优先于 +。然后加法运算符出现在 A 和乘法的结果之前。<br>在后缀中，表达式将是 A B C * +，再次，操作的顺序被保留，因为 * 紧接在 B 和 C 之后出现，表示 * 具有高优先级，+ 优先级低。虽然操作符在它们各自的操作数前后移动，但是顺序相对于彼此保持完全相同。<br>3.9.中缀后缀和后缀表达式.table2</p>
+<p>Table 2<br>现在考虑中缀表达式 (A + B) * C，回想下，在这种情况下，中缀需要括号在乘法之前强制执行加法。然而，当 A+B 写到前缀中时，加法运算符简单的移动到操作数 + A B 之前。这个操作的结果成为乘法的第一个操作数。乘法运算符移动到整个表达式的前面，得出 * + A B C，同样，在后缀 A B +中，强制先加法。可以直接对该结果和剩余的操作数 C 相乘。然后，得出后缀表达式为 A B + C *。<br>再次考虑这三个表达式(见 Table 3)，括号不见了。为什么在前缀和后缀的时候不需要括号了呢？答案是操作符对于他们的操作数不再模糊，只有中缀才需要括号，前缀和后缀表达式的操作顺序完全由操作符的顺序决定。<br>3.9.中缀后缀和后缀表达式.table3</p>
+<p>Table 3<br>Table 4 展示了一些其他的例子<br>3.9.中缀后缀和后缀表达式.table4</p>
+<p>Table 4<br>3.9.1.中缀表达式转换前缀和后缀<br>到目前为止，我们已经使用特定方法在中缀表达式和等效前缀和后缀表达式符号之间进行转换。正如你可能期望的，有一些算法来执行转换，允许任何复杂表达式转换。<br>我们考虑的第一种技术使用前面讨论的完全括号表达式的概念。回想一下，A + B * C可以写成（A +（B * C）），以明确标识乘法优先于加法。然而，仔细观察,你可以看到每个括号对还表示操作数对的开始和结束，中间有相应的运算符。<br>看上面的子表达式（B * C）中的右括号。 如果我们将乘法符号移动到那个位置，并删除匹配的左括号，得到 B C *，我们实际上已经将子表达式转换为后缀符号。 如果加法运算符也被移动到其相应的右括号位置并且匹配的左括号被去除，则将得到完整的后缀表达式（见 Figure 6）。<br>3.9.中缀后缀和后缀表达式.figure6</p>
+<p>Figure 6<br>如果我们不是将符号移动到右括号的位置，我们将它向左移动，我们得到前缀符号（见 Figure 7）。圆括号对的位置实际上是包含的运算符的最终位置的线索。 3.9.中缀后缀和后缀表达式.figure7<br>Figure 7<br>所以为了转换表达式，无论是对前缀还是后缀符号，先根据操作的顺序把表达式转换成完全括号表达式。然后将包含的运算符移动到左或右括号的位置，具体取决于需要前缀或后缀符号。<br>这里面有个更复杂的例子, (A + B) * C - (D - E) * (F + G) ，Figure 8 显示了如何转换为后缀和前缀。<br>3.9.中缀后缀和后缀表达式.figure8</p>
+<p>Figure 8<br>3.9.2.中缀转后缀通用法<br>我们需要开发一个算法来将任何中缀表达式转换为后缀表达式。 为了做到这一点，我们仔细看看转换过程。<br>再次考虑表达式 A + B * C。如上所示，A B C * +是等价的后缀表达式。 我们已经注意到，操作数 A，B 和 C 保持在它们的相对位置。只有操作符改变位置。再看中缀表达式中的运算符。从左到右出现的第一个运算符为 +。 然而，在后缀表达式中，+ 在结束位置，因为下一个运算符 * 的优先级高于加法。 原始表达式中的运算符的顺序在生成的后缀表达式中相反。<br>当我们处理表达式时，操作符必须保存在某处，因为它们相应的右操作数还没有看到。 此外，这些保存的操作符的顺序可能由于它们的优先级而需要反转。这是在该示例中的加法和乘法的情况，由于加法运算符在乘法运算符之前，并且具有较低的优先级，因此需要在使用乘法运算符之后出现。 由于这种顺序的反转，考虑使用栈来保存运算符直到用到它们是有意义的。<br>(A + B)* C的情况会是什么样呢？ 回想一下，A B + C <em>是等价的后缀表达式。从左到右处理此中缀表达式，我们先看到 +。 在这种情况下，当我们看到 <em>，+已经放置在结果表达式中，由于括号它的优先级高于</em>。 我们现在可以开始看看转换算法如何工作。当我们看到左括号时，我们保存它，表示高优先级的另一个运算符将出现。该操作符需要等到相应的右括号出现以表示其位置（回忆完全括号的算法）。 当右括号出现时，可以从栈中弹出操作符。<br>当我们从左到右扫描中缀表达式时，我们将使用栈来保留运算符。这将提供我们在第一个例子中注意到的反转。 堆栈的顶部将始终是最近保存的运算符。每当我们读取一个新的运算符时，我们需要考虑该运算符如何与已经在栈上的运算符（如果有的话）比较优先级。<br>假设中缀表达式是一个由空格分隔的标记字符串。 操作符标记是</em>，/，+和 - ，以及左右括号。操作数是单字符 A，B，C 等。 以下步骤将后缀顺序生成一个字符串。<br>创建一个名为 opstack 的空栈以保存运算符。给输出创建一个空列表。<br>通过使用字符串方法拆分将输入的中缀字符串转换为标记列表。<br>从左到右扫描标记列表。<br>如果标记是操作数，将其附加到输出列表的末尾。<br>如果标记是左括号，将其压到 opstack 上。<br>如果标记是右括号，则弹出 opstack，直到删除相应的左括号。将每个运算符附加到输出列表的末尾。<br>如果标记是运算符，*，/，+或 - ，将其压入 opstack。但是，首先删除已经在 opstack 中具有更高或相等优先级的任何运算符，并将它们加到输出列表中。<br>当输入表达式被完全处理时，检查 opstack。仍然在栈上的任何运算符都可以删除并加到输出列表的末尾。<br>Figure 9 展示了对表达式 A * B + C * D 的转换算法。注意，第一个 * 在看到 + 运算符时被删除。另外，当第二个 * 出现时， + 保留在栈中，因为乘法优先级高于加法。在中缀表达式的末尾，栈被弹出两次，删除两个运算符，并将 + 作为后缀表达式中的最后一个运算符。<br>3.9.中缀后缀和后缀表达式.figure9</p>
+<p>Figure 9<br>为了在 Python 中编写算法，我们使用一个名为 prec 的字典来保存操作符的优先级。这个字典将每个运算符映射到一个整数，可以与其他运算符的优先级（我们使用整数3，2和1）进行比较。左括号将赋予最低的值。这样，与其进行比较的任何运算符将具有更高的优先级，将被放置在它的顶部。第15行将操作数定义为任何大写字符或数字。完整的转换函数见 ActiveCode 1。<br>from pythonds.basic.stack import Stack</p>
+<p>def infixToPostfix(infixexpr):<br>    prec = {}<br>    prec[“*”] = 3<br>    prec[“/“] = 3<br>    prec[“+”] = 2<br>    prec[“-“] = 2<br>    prec[“(“] = 1<br>    opStack = Stack()<br>    postfixList = []<br>    tokenList = infixexpr.split()</p>
+<pre><code>for token in tokenList:
+    if token in &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot; or token in &quot;0123456789&quot;:
+        postfixList.append(token)
+    elif token == &#39;(&#39;:
+        opStack.push(token)
+    elif token == &#39;)&#39;:
+        topToken = opStack.pop()
+        while topToken != &#39;(&#39;:
+            postfixList.append(topToken)
+            topToken = opStack.pop()
+    else:
+        while (not opStack.isEmpty()) and \
+           (prec[opStack.peek()] &gt;= prec[token]):
+              postfixList.append(opStack.pop())
+        opStack.push(token)
+
+while not opStack.isEmpty():
+    postfixList.append(opStack.pop())
+return &quot; &quot;.join(postfixList)
+</code></pre>
+<p>print(infixToPostfix(“A * B + C * D”))<br>print(infixToPostfix(“( A + B ) * C - ( D - E ) * ( F + G )”))<br>执行结果如下</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>infixtopostfix(“( A + B ) * ( C + D )”)<br>‘A B + C D + *’<br>infixtopostfix(“( A + B ) * C”)<br>‘A B + C *’<br>infixtopostfix(“A + B * C”)<br>‘A B C * +’</p>
+</blockquote>
+<p>3.9.3.后缀表达式求值<br>作为最后栈的示例，我们考虑对后缀符号中的表达式求值。在这种情况下，栈再次是我们选择的数据结构。但是，在扫描后缀表达式时，它必须等待操作数，而不像上面的转换算法中的运算符。 解决问题的另一种方法是，每当在输入上看到运算符时，计算两个最近的操作数。<br>要详细的了解这一点，考虑后缀表达式 4 5 6 * +， 首先遇到操作数 4 和 5，此时，你还不确定如何处理它们，直到看到下一个符号。将它们放置到栈上，确保它们在下一个操作符出现时可用。<br>在这种情况下，下一个符号是另一个操作数。所以，像先前一样，压入栈中。并检查下一个符号。现在我们看到了操作符 *，这意味着需要将两个最近的操作数相乘。通过弹出栈两次，我们可以得到正确的两个操作数，然后执行乘法（这种情况下结果为 30）。<br>我们现在可以通过将其放回栈中来处理此结果，以便它可以表示为表达式后面的运算符的操作数。当处理最后一个操作符时，栈上只有一个值，弹出并返回它作为表达式的结果。Figure 10 展示了整个示例表达式的栈的内容。<br>3.9.中缀后缀和后缀表达式.figure10</p>
+</blockquote>
+</blockquote>
+<p>Figure 10<br>Figure 11 是个稍微复杂的示例，7 8 + 3 2 + / 。在这个例子中有两点需要注意，首先，栈的大小增长收缩，然后再子表达式求值的时候再次增长。第二，除法操作需要谨慎处理。回想下，后缀表达式的操作符顺序没变，仅仅改变操作符的位置。当用于除法的操作符从栈中弹出时，它们被反转。由于除法不是交换运算符，换句话说 15/5和 5/15 不同，因此我们必须保证操作数的顺序不会交换。<br>3.9.中缀后缀和后缀表达式.figure11</p>
+<p>Figure 11<br>假设后缀表达式是一个由空格分隔的标记字符串。 运算符为<em>，/，+和 - ，操作数假定为单个整数值。 输出将是一个整数结果。<br>创建一个名为 operandStack 的空栈。<br>拆分字符串转换为标记列表。<br>从左到右扫描标记列表。<br>如果标记是操作数，将其从字符串转换为整数，并将值压到operandStack。<br>如果标记是运算符</em>，/，+或-，它将需要两个操作数。弹出operandStack 两次。 第一个弹出的是第二个操作数，第二个弹出的是第一个操作数。执行算术运算后，将结果压到操作数栈中。<br>当输入的表达式被完全处理后，结果就在栈上，弹出 operandStack 并返回值。<br>用于计算后缀表达式的完整函数见 ActiveCode 2，为了辅助计算，定义了一个函数 doMath, 它将获取两个操作数和运算符，执行相应的计算。<br>from pythonds.basic.stack import Stack</p>
+<p>def postfixEval(postfixExpr):<br>    operandStack = Stack()<br>    tokenList = postfixExpr.split()</p>
+<pre><code>for token in tokenList:
+    if token in &quot;0123456789&quot;:
+        operandStack.push(int(token))
+    else:
+        operand2 = operandStack.pop()
+        operand1 = operandStack.pop()
+        result = doMath(token,operand1,operand2)
+        operandStack.push(result)
+return operandStack.pop()
+</code></pre>
+<p>def doMath(op, op1, op2):<br>    if op == “*”:<br>        return op1 * op2<br>    elif op == “/“:<br>        return op1 / op2<br>    elif op == “+”:<br>        return op1 + op2<br>    else:<br>        return op1 - op2</p>
+<p>print(postfixEval(‘7 8 + 3 2 + /‘))</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>原创技术分享，您的支持将鼓励我继续创作</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Javy WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="Javy Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/machine_learning/owt-server_install/" rel="prev" title="owt-server源码编译和部署">
+      <i class="fa fa-chevron-left"></i> owt-server源码编译和部署
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/data_structure/sort_and_search/" rel="next" title="排序和搜索">
+      排序和搜索 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">基本数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%AE%E6%A0%87"><span class="nav-number">1.1.</span> <span class="nav-text">目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%BA%BF%E6%80%A7%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">什么是线性数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%A0%88"><span class="nav-number">1.3.</span> <span class="nav-text">什么是栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%88%E7%9A%84%E6%8A%BD%E8%B1%A1%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.4.</span> <span class="nav-text">栈的抽象数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python%E5%AE%9E%E7%8E%B0%E6%A0%88"><span class="nav-number">1.5.</span> <span class="nav-text">Python实现栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%AD%E7%BC%80%EF%BC%8C%E5%89%8D%E7%BC%80%E5%92%8C%E5%90%8E%E7%BC%80%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">1.6.</span> <span class="nav-text">中缀，前缀和后缀表达式</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Javy"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Javy</p>
+  <div class="site-description" itemprop="description">You can create art and beauty on a computer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/javyxu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;javyxu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018 - 2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javy</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'de44f4e91f73c590197c',
+      clientSecret: '840b907d657247c9ddcbcec968b641fda5d3b969',
+      repo        : 'javyxu.github.io',
+      owner       : 'javyxu',
+      admin       : ['javyxu'],
+      id          : '2ccba5da43f341f1612a93c714e0ebd7',
+      proxy       : 'https://netnr-proxy.cloudno.de/https://github.com/login/oauth/access_token',
+        language: 'en',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

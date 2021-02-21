@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"javyxu.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="GDAL的简介和安装在地理信息界，GDAL就是万物之源，即使连ArcGIS和QGIS都是引用它完成基础数据的处理。这开源的好东西，无疑是我们最最得意的拿手好戏。其实GDAL全名为Geospatial Data Abstraction Library，来个官网，这个库分为两大部分是GDAL和OGR，分别管理着栅格和矢量数据。底层是C语言，上层可以是多种语言（包括python）调用，所以不用担心效率的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GDAL的简介和安装">
+<meta property="og:url" content="https://javyxu.cn/gdal/gdal_using/index.html">
+<meta property="og:site_name" content="Tech Blog">
+<meta property="og:description" content="GDAL的简介和安装在地理信息界，GDAL就是万物之源，即使连ArcGIS和QGIS都是引用它完成基础数据的处理。这开源的好东西，无疑是我们最最得意的拿手好戏。其实GDAL全名为Geospatial Data Abstraction Library，来个官网，这个库分为两大部分是GDAL和OGR，分别管理着栅格和矢量数据。底层是C语言，上层可以是多种语言（包括python）调用，所以不用担心效率的">
+<meta property="og:locale">
+<meta property="article:published_time" content="2019-02-21T14:00:00.000Z">
+<meta property="article:modified_time" content="2021-02-21T02:37:33.302Z">
+<meta property="article:author" content="Javy">
+<meta property="article:tag" content="BigData、GIS">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://javyxu.cn/gdal/gdal_using/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>GDAL的简介和安装 | Tech Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Tech Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Javy's Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-algorithm">
+
+    <a href="/algorithm/" rel="section"><i class="fa fa-code fa-fw"></i>Algorithm</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/javyxu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="https://javyxu.cn/gdal/gdal_using/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Javy">
+      <meta itemprop="description" content="You can create art and beauty on a computer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          GDAL的简介和安装
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-02-21 22:00:00" itemprop="dateCreated datePublished" datetime="2019-02-21T22:00:00+08:00">2019-02-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-21 10:37:33" itemprop="dateModified" datetime="2021-02-21T10:37:33+08:00">2021-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/BigData/" itemprop="url" rel="index"><span itemprop="name">BigData</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/GIS/" itemprop="url" rel="index"><span itemprop="name">GIS</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="GDAL的简介和安装"><a href="#GDAL的简介和安装" class="headerlink" title="GDAL的简介和安装"></a>GDAL的简介和安装</h2><p>在地理信息界，GDAL就是万物之源，即使连ArcGIS和QGIS都是引用它完成基础数据的处理。这开源的好东西，无疑是我们最最得意的拿手好戏。<br>其实GDAL全名为<code>Geospatial Data Abstraction Library</code>，来个官网，这个库分为两大部分是<strong>GDAL</strong>和<strong>OGR</strong>，分别管理着<strong>栅格</strong>和<strong>矢量</strong>数据。底层是C语言，上层可以是多种语言（包括python）调用，所以不用担心效率的问题。</p>
+<p>GDAL主要包括以下几个主要的命令：</p>
+<ul>
+<li>gdalinfo: 浏览图片信息</li>
+<li>gdal_translate: 格式转换</li>
+<li>gdalwarp: 重投影</li>
+<li>gdal_warp或者gdal_merge.py: 拼接数据</li>
+<li>gdaltindex: 建立shapefile拥有栅格编号<a id="more"></a>
+<h3 id="GDAL的安装和部署"><a href="#GDAL的安装和部署" class="headerlink" title="GDAL的安装和部署"></a>GDAL的安装和部署</h3><h4 id="GDAL源码安装"><a href="#GDAL源码安装" class="headerlink" title="GDAL源码安装"></a>GDAL源码安装</h4>由于本人一直处理不同的影像的数据，所以希望安装的GDAL尽可能支持多的数据格式，所以需要源码安装。<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">yum install openjpeg2-devel netcdf-devel hdf-devel geos-devel pcre-devel</span><br><span class="line"></span><br><span class="line">wget http://download.osgeo.org/gdal/2.4.0/gdal-2.4.0.tar.gz</span><br><span class="line">tar -zxvf gdal-2.4.0.tar.gz</span><br><span class="line">cd gdal-2.4.0</span><br><span class="line"></span><br><span class="line">./configure</span><br><span class="line">sudo make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+<h4 id="查看编译安装后，GDAL支持的格式"><a href="#查看编译安装后，GDAL支持的格式" class="headerlink" title="查看编译安装后，GDAL支持的格式"></a>查看编译安装后，GDAL支持的格式</h4></li>
+</ul>
+<ol>
+<li>raster data<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdalinfo --formats</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br></pre></td><td class="code"><pre><span class="line">Supported Formats:</span><br><span class="line">  VRT -raster- (rw+v): Virtual Raster</span><br><span class="line">  DERIVED -raster- (ro): Derived datasets using VRT pixel functions</span><br><span class="line">  GTiff -raster- (rw+vs): GeoTIFF</span><br><span class="line">  NITF -raster- (rw+vs): National Imagery Transmission Format</span><br><span class="line">  RPFTOC -raster- (rovs): Raster Product Format TOC format</span><br><span class="line">  ECRGTOC -raster- (rovs): ECRG TOC format</span><br><span class="line">  HFA -raster- (rw+v): Erdas Imagine Images (.img)</span><br><span class="line">  SAR_CEOS -raster- (rov): CEOS SAR Image</span><br><span class="line">  CEOS -raster- (rov): CEOS Image</span><br><span class="line">  JAXAPALSAR -raster- (rov): JAXA PALSAR Product Reader (Level 1.1/1.5)</span><br><span class="line">  GFF -raster- (rov): Ground-based SAR Applications Testbed File Format (.gff)</span><br><span class="line">  ELAS -raster- (rw+v): ELAS</span><br><span class="line">  AIG -raster- (rov): Arc/Info Binary Grid</span><br><span class="line">  AAIGrid -raster- (rwv): Arc/Info ASCII Grid</span><br><span class="line">  GRASSASCIIGrid -raster- (rov): GRASS ASCII Grid</span><br><span class="line">  SDTS -raster- (rov): SDTS Raster</span><br><span class="line">  DTED -raster- (rwv): DTED Elevation Raster</span><br><span class="line">  PNG -raster- (rwv): Portable Network Graphics</span><br><span class="line">  JPEG -raster- (rwv): JPEG JFIF</span><br><span class="line">  MEM -raster- (rw+): In Memory Raster</span><br><span class="line">  JDEM -raster- (rov): Japanese DEM (.mem)</span><br><span class="line">  GIF -raster- (rwv): Graphics Interchange Format (.gif)</span><br><span class="line">  BIGGIF -raster- (rov): Graphics Interchange Format (.gif)</span><br><span class="line">  ESAT -raster- (rov): Envisat Image Format</span><br><span class="line">  BSB -raster- (rov): Maptech BSB Nautical Charts</span><br><span class="line">  XPM -raster- (rwv): X11 PixMap Format</span><br><span class="line">  BMP -raster- (rw+v): MS Windows Device Independent Bitmap</span><br><span class="line">  DIMAP -raster- (rov): SPOT DIMAP</span><br><span class="line">  AirSAR -raster- (rov): AirSAR Polarimetric Image</span><br><span class="line">  RS2 -raster- (rovs): RadarSat 2 XML Product</span><br><span class="line">  SAFE -raster- (rov): Sentinel-1 SAR SAFE Product</span><br><span class="line">  PCIDSK -raster,vector- (rw+v): PCIDSK Database File</span><br><span class="line">  PCRaster -raster- (rw+): PCRaster Raster File</span><br><span class="line">  ILWIS -raster- (rw+v): ILWIS Raster Map</span><br><span class="line">  SGI -raster- (rw+v): SGI Image File Format 1.0</span><br><span class="line">  SRTMHGT -raster- (rwv): SRTMHGT File Format</span><br><span class="line">  Leveller -raster- (rw+v): Leveller heightfield</span><br><span class="line">  Terragen -raster- (rw+v): Terragen heightfield</span><br><span class="line">  GMT -raster- (rw): GMT NetCDF Grid Format</span><br><span class="line">  netCDF -raster,vector- (rw+s): Network Common Data Format</span><br><span class="line">  ISIS3 -raster- (rw+v): USGS Astrogeology ISIS cube (Version 3)</span><br><span class="line">  ISIS2 -raster- (rw+v): USGS Astrogeology ISIS cube (Version 2)</span><br><span class="line">  PDS -raster- (rov): NASA Planetary Data System</span><br><span class="line">  PDS4 -raster- (rw+vs): NASA Planetary Data System 4</span><br><span class="line">  VICAR -raster- (rov): MIPL VICAR file</span><br><span class="line">  TIL -raster- (rov): EarthWatch .TIL</span><br><span class="line">  ERS -raster- (rw+v): ERMapper .ers Labelled</span><br><span class="line">  JP2OpenJPEG -raster,vector- (rwv): JPEG-2000 driver based on OpenJPEG library</span><br><span class="line">  L1B -raster- (rovs): NOAA Polar Orbiter Level 1b Data Set</span><br><span class="line">  FIT -raster- (rwv): FIT Image</span><br><span class="line">  GRIB -raster- (rwv): GRIdded Binary (.grb, .grb2)</span><br><span class="line">  RMF -raster- (rw+v): Raster Matrix Format</span><br><span class="line">  WCS -raster- (rovs): OGC Web Coverage Service</span><br><span class="line">  WMS -raster- (rwvs): OGC Web Map Service</span><br><span class="line">  MSGN -raster- (rov): EUMETSAT Archive native (.nat)</span><br><span class="line">  RST -raster- (rw+v): Idrisi Raster A.1</span><br><span class="line">  INGR -raster- (rw+v): Intergraph Raster</span><br><span class="line">  GSAG -raster- (rwv): Golden Software ASCII Grid (.grd)</span><br><span class="line">  GSBG -raster- (rw+v): Golden Software Binary Grid (.grd)</span><br><span class="line">  GS7BG -raster- (rw+v): Golden Software 7 Binary Grid (.grd)</span><br><span class="line">  COSAR -raster- (rov): COSAR Annotated Binary Matrix (TerraSAR-X)</span><br><span class="line">  TSX -raster- (rov): TerraSAR-X Product</span><br><span class="line">  COASP -raster- (ro): DRDC COASP SAR Processor Raster</span><br><span class="line">  R -raster- (rwv): R Object Data Store</span><br><span class="line">  MAP -raster- (rov): OziExplorer .MAP</span><br><span class="line">  KMLSUPEROVERLAY -raster- (rwv): Kml Super Overlay</span><br><span class="line">  PDF -raster,vector- (w+): Geospatial PDF</span><br><span class="line">  PLMOSAIC -raster- (ro): Planet Labs Mosaics API</span><br><span class="line">  CALS -raster- (rwv): CALS (Type 1)</span><br><span class="line">  WMTS -raster- (rwv): OGC Web Map Tile Service</span><br><span class="line">  SENTINEL2 -raster- (rovs): Sentinel 2</span><br><span class="line">  MRF -raster- (rw+v): Meta Raster Format</span><br><span class="line">  PNM -raster- (rw+v): Portable Pixmap Format (netpbm)</span><br><span class="line">  DOQ1 -raster- (rov): USGS DOQ (Old Style)</span><br><span class="line">  DOQ2 -raster- (rov): USGS DOQ (New Style)</span><br><span class="line">  PAux -raster- (rw+v): PCI .aux Labelled</span><br><span class="line">  MFF -raster- (rw+v): Vexcel MFF Raster</span><br><span class="line">  MFF2 -raster- (rw+): Vexcel MFF2 (HKV) Raster</span><br><span class="line">  FujiBAS -raster- (rov): Fuji BAS Scanner Image</span><br><span class="line">  GSC -raster- (rov): GSC Geogrid</span><br><span class="line">  FAST -raster- (rov): EOSAT FAST Format</span><br><span class="line">  BT -raster- (rw+v): VTP .bt (Binary Terrain) 1.3 Format</span><br><span class="line">  LAN -raster- (rw+v): Erdas .LAN/.GIS</span><br><span class="line">  CPG -raster- (rov): Convair PolGASP</span><br><span class="line">  IDA -raster- (rw+v): Image Data and Analysis</span><br><span class="line">  NDF -raster- (rov): NLAPS Data Format</span><br><span class="line">  EIR -raster- (rov): Erdas Imagine Raw</span><br><span class="line">  DIPEx -raster- (rov): DIPEx</span><br><span class="line">  LCP -raster- (rwv): FARSITE v.4 Landscape File (.lcp)</span><br><span class="line">  GTX -raster- (rw+v): NOAA Vertical Datum .GTX</span><br><span class="line">  LOSLAS -raster- (rov): NADCON .los/.las Datum Grid Shift</span><br><span class="line">  NTv1 -raster- (rov): NTv1 Datum Grid Shift</span><br><span class="line">  NTv2 -raster- (rw+vs): NTv2 Datum Grid Shift</span><br><span class="line">  CTable2 -raster- (rw+v): CTable2 Datum Grid Shift</span><br><span class="line">  ACE2 -raster- (rov): ACE2</span><br><span class="line">  SNODAS -raster- (rov): Snow Data Assimilation System</span><br><span class="line">  KRO -raster- (rw+v): KOLOR Raw</span><br><span class="line">  ROI_PAC -raster- (rw+v): ROI_PAC raster</span><br><span class="line">  RRASTER -raster- (rw+v): R Raster</span><br><span class="line">  BYN -raster- (rw+v): Natural Resources Canadas Geoid</span><br><span class="line">  ARG -raster- (rwv): Azavea Raster Grid format</span><br><span class="line">  RIK -raster- (rov): Swedish Grid RIK (.rik)</span><br><span class="line">  USGSDEM -raster- (rwv): USGS Optional ASCII DEM (and CDED)</span><br><span class="line">  GXF -raster- (rov): GeoSoft Grid Exchange Format</span><br><span class="line">  BAG -raster- (rwv): Bathymetry Attributed Grid</span><br><span class="line">  HDF5 -raster- (rovs): Hierarchical Data Format Release 5</span><br><span class="line">  HDF5Image -raster- (rov): HDF5 Dataset</span><br><span class="line">  NWT_GRD -raster- (rw+v): Northwood Numeric Grid Format .grd/.tab</span><br><span class="line">  NWT_GRC -raster- (rov): Northwood Classified Grid Format .grc/.tab</span><br><span class="line">  ADRG -raster- (rw+vs): ARC Digitized Raster Graphics</span><br><span class="line">  SRP -raster- (rovs): Standard Raster Product (ASRP/USRP)</span><br><span class="line">  BLX -raster- (rwv): Magellan topo (.blx)</span><br><span class="line">  SAGA -raster- (rw+v): SAGA GIS Binary Grid (.sdat, .sg-grd-z)</span><br><span class="line">  XYZ -raster- (rwv): ASCII Gridded XYZ</span><br><span class="line">  HF2 -raster- (rwv): HF2/HFZ heightfield raster</span><br><span class="line">  OZI -raster- (rov): OziExplorer Image File</span><br><span class="line">  CTG -raster- (rov): USGS LULC Composite Theme Grid</span><br><span class="line">  E00GRID -raster- (rov): Arc/Info Export E00 GRID</span><br><span class="line">  ZMap -raster- (rwv): ZMap Plus Grid</span><br><span class="line">  NGSGEOID -raster- (rov): NOAA NGS Geoid Height Grids</span><br><span class="line">  IRIS -raster- (rov): IRIS data (.PPI, .CAPPi etc)</span><br><span class="line">  PRF -raster- (rov): Racurs PHOTOMOD PRF</span><br><span class="line">  RDA -raster- (ro): DigitalGlobe Raster Data Access driver</span><br><span class="line">  EEDAI -raster- (ros): Earth Engine Data API Image</span><br><span class="line">  SIGDEM -raster- (rwv): Scaled Integer Gridded DEM .sigdem</span><br><span class="line">  IGNFHeightASCIIGrid -raster- (rov): IGN France height correction ASCII Grid</span><br><span class="line">  CAD -raster,vector- (rovs): AutoCAD Driver</span><br><span class="line">  PLSCENES -raster,vector- (ro): Planet Labs Scenes API</span><br><span class="line">  NGW -raster,vector- (rw+s): NextGIS Web</span><br><span class="line">  GenBin -raster- (rov): Generic Binary (.hdr Labelled)</span><br><span class="line">  ENVI -raster- (rw+v): ENVI .hdr Labelled</span><br><span class="line">  EHdr -raster- (rw+v): ESRI .hdr Labelled</span><br><span class="line">  ISCE -raster- (rw+v): ISCE raster</span><br><span class="line">  HTTP -raster,vector- (ro): HTTP Fetching Wrapper</span><br></pre></td></tr></table></figure></li>
+<li>vector data<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ogrinfo --formats</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">Supported Formats:</span><br><span class="line">  PCIDSK -raster,vector- (rw+v): PCIDSK Database File</span><br><span class="line">  netCDF -raster,vector- (rw+s): Network Common Data Format</span><br><span class="line">  JPEG2000 -raster,vector- (rwv): JPEG-2000 part 1 (ISO/IEC 15444-1), based on Jasper library</span><br><span class="line">  PDF -raster,vector- (w+): Geospatial PDF</span><br><span class="line">  MBTiles -raster,vector- (rw+v): MBTiles</span><br><span class="line">  EEDA -vector- (ro): Earth Engine Data API</span><br><span class="line">  ESRI Shapefile -vector- (rw+v): ESRI Shapefile</span><br><span class="line">  MapInfo File -vector- (rw+v): MapInfo File</span><br><span class="line">  UK .NTF -vector- (rov): UK .NTF</span><br><span class="line">  OGR_SDTS -vector- (rov): SDTS</span><br><span class="line">  S57 -vector- (rw+v): IHO S-57 (ENC)</span><br><span class="line">  DGN -vector- (rw+v): Microstation DGN</span><br><span class="line">  OGR_VRT -vector- (rov): VRT - Virtual Datasource</span><br><span class="line">  REC -vector- (ro): EPIInfo .REC</span><br><span class="line">  Memory -vector- (rw+): Memory</span><br><span class="line">  BNA -vector- (rw+v): Atlas BNA</span><br><span class="line">  CSV -vector- (rw+v): Comma Separated Value (.csv)</span><br><span class="line">  NAS -vector- (rov): NAS - ALKIS</span><br><span class="line">  GML -vector- (rw+v): Geography Markup Language (GML)</span><br><span class="line">  GPX -vector- (rw+v): GPX</span><br><span class="line">  KML -vector- (rw+v): Keyhole Markup Language (KML)</span><br><span class="line">  GeoJSON -vector- (rw+v): GeoJSON</span><br><span class="line">  GeoJSONSeq -vector- (rw+v): GeoJSON Sequence</span><br><span class="line">  ESRIJSON -vector- (rov): ESRIJSON</span><br><span class="line">  TopoJSON -vector- (rov): TopoJSON</span><br><span class="line">  Interlis 1 -vector- (rw+v): Interlis 1</span><br><span class="line">  Interlis 2 -vector- (rw+v): Interlis 2</span><br><span class="line">  OGR_GMT -vector- (rw+v): GMT ASCII Vectors (.gmt)</span><br><span class="line">  GPKG -raster,vector- (rw+vs): GeoPackage</span><br><span class="line">  SQLite -vector- (rw+v): SQLite / Spatialite</span><br><span class="line">  ODBC -vector- (rw+): ODBC</span><br><span class="line">  WAsP -vector- (rw+v): WAsP .map format</span><br><span class="line">  PGeo -vector- (ro): ESRI Personal GeoDatabase</span><br><span class="line">  MSSQLSpatial -vector- (rw+): Microsoft SQL Server Spatial Database</span><br><span class="line">  OpenFileGDB -vector- (rov): ESRI FileGDB</span><br><span class="line">  XPlane -vector- (rov): X-Plane/Flightgear aeronautical data</span><br><span class="line">  DXF -vector- (rw+v): AutoCAD DXF</span><br><span class="line">  CAD -raster,vector- (rovs): AutoCAD Driver</span><br><span class="line">  Geoconcept -vector- (rw+v): Geoconcept</span><br><span class="line">  GeoRSS -vector- (rw+v): GeoRSS</span><br><span class="line">  GPSTrackMaker -vector- (rw+v): GPSTrackMaker</span><br><span class="line">  VFK -vector- (ro): Czech Cadastral Exchange Data Format</span><br><span class="line">  PGDUMP -vector- (w+v): PostgreSQL SQL dump</span><br><span class="line">  OSM -vector- (rov): OpenStreetMap XML and PBF</span><br><span class="line">  GPSBabel -vector- (rw+): GPSBabel</span><br><span class="line">  SUA -vector- (rov): Tim Newport-Peaces Special Use Airspace Format</span><br><span class="line">  OpenAir -vector- (rov): OpenAir</span><br><span class="line">  OGR_PDS -vector- (rov): Planetary Data Systems TABLE</span><br><span class="line">  WFS -vector- (rov): OGC WFS (Web Feature Service)</span><br><span class="line">  WFS3 -vector- (ro): OGC WFS 3 client (Web Feature Service)</span><br><span class="line">  HTF -vector- (rov): Hydrographic Transfer Vector</span><br><span class="line">  AeronavFAA -vector- (rov): Aeronav FAA</span><br><span class="line">  Geomedia -vector- (ro): Geomedia .mdb</span><br><span class="line">  EDIGEO -vector- (rov): French EDIGEO exchange format</span><br><span class="line">  GFT -vector- (rw+): Google Fusion Tables</span><br><span class="line">  SVG -vector- (rov): Scalable Vector Graphics</span><br><span class="line">  CouchDB -vector- (rw+): CouchDB / GeoCouch</span><br><span class="line">  Cloudant -vector- (rw+): Cloudant / CouchDB</span><br><span class="line">  Idrisi -vector- (rov): Idrisi Vector (.vct)</span><br><span class="line">  ARCGEN -vector- (rov): Arc/Info Generate</span><br><span class="line">  SEGUKOOA -vector- (rov): SEG-P1 / UKOOA P1/90</span><br><span class="line">  SEGY -vector- (rov): SEG-Y</span><br><span class="line">  XLS -vector- (ro): MS Excel format</span><br><span class="line">  ODS -vector- (rw+v): Open Document/ LibreOffice / OpenOffice Spreadsheet</span><br><span class="line">  XLSX -vector- (rw+v): MS Office Open XML spreadsheet</span><br><span class="line">  ElasticSearch -vector- (rw+): Elastic Search</span><br><span class="line">  Walk -vector- (ro): Walk</span><br><span class="line">  Carto -vector- (rw+): Carto</span><br><span class="line">  AmigoCloud -vector- (rw+): AmigoCloud</span><br><span class="line">  SXF -vector- (rov): Storage and eXchange Format</span><br><span class="line">  Selafin -vector- (rw+v): Selafin</span><br><span class="line">  JML -vector- (rw+v): OpenJUMP JML</span><br><span class="line">  PLSCENES -raster,vector- (ro): Planet Labs Scenes API</span><br><span class="line">  CSW -vector- (ro): OGC CSW (Catalog  Service for the Web)</span><br><span class="line">  VDV -vector- (rw+v): VDV-451/VDV-452/INTREST Data Format</span><br><span class="line">  GMLAS -vector- (rwv): Geography Markup Language (GML) driven by application schemas</span><br><span class="line">  MVT -vector- (rw+v): Mapbox Vector Tiles</span><br><span class="line">  TIGER -vector- (rw+v): U.S. Census TIGER/Line</span><br><span class="line">  AVCBin -vector- (rov): Arc/Info Binary Coverage</span><br><span class="line">  AVCE00 -vector- (rov): Arc/Info E00 (ASCII) Coverage</span><br><span class="line">  NGW -raster,vector- (rw+s): NextGIS Web</span><br><span class="line">  HTTP -raster,vector- (ro): HTTP Fetching Wrapper</span><br></pre></td></tr></table></figure>
+<h4 id="在Python下使用GDAL"><a href="#在Python下使用GDAL" class="headerlink" title="在Python下使用GDAL"></a>在Python下使用GDAL</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> osgeo <span class="keyword">import</span> gdal, gdal_array</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开GDAL支持的数据</span></span><br><span class="line">ds = gdal.Open(filename)</span><br><span class="line">subds = root_ds.GetSubDatasets()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存为TIFF数据</span></span><br><span class="line">driver = gdal.GetDriverByName(<span class="string">&#x27;GTiff&#x27;</span>)</span><br><span class="line">dataset = driver.Create(<span class="string">&#x27;./test.tif&#x27;</span>, RasterXSize, RasterYSize, RasterCount, DataType) <span class="comment"># DataType: gdal .GDT_UInt16</span></span><br><span class="line">out_data = dataset.GetRasterBand(<span class="number">1</span>)</span><br><span class="line">out_data.WriteArray(np.array(in_data))</span><br><span class="line">dataset.close()</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><em>此处只是简单结束，更多数据的读取和保存，请查看本人其他博客。</em></p>
+<h4 id="源码安装后可能会存在的问题"><a href="#源码安装后可能会存在的问题" class="headerlink" title="源码安装后可能会存在的问题"></a>源码安装后可能会存在的问题</h4><ol>
+<li>在执行import gdal_array时出现：<br>osgeo/_gdal.cpython-36m-x86_64-linux-gnu.so: undefined symbol: GDALDatasetTestCapability</li>
+</ol>
+<p>  <strong>解决方法：</strong> export LD_PRELOAD=/usr/local/lib/libgdal.so.20</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>原创技术分享，您的支持将鼓励我继续创作</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Javy WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="Javy Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/BigData%E3%80%81GIS/" rel="tag"># BigData、GIS</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/bigdata/geopyspark/geopyspark_map_algebra/" rel="prev" title="GeoPySpark中的地图代数">
+      <i class="fa fa-chevron-left"></i> GeoPySpark中的地图代数
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/machine_learning/top_10_machine_learning_algorithms/" rel="next" title="十大机器学习算法简介">
+      十大机器学习算法简介 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GDAL%E7%9A%84%E7%AE%80%E4%BB%8B%E5%92%8C%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">GDAL的简介和安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#GDAL%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E9%83%A8%E7%BD%B2"><span class="nav-number">1.1.</span> <span class="nav-text">GDAL的安装和部署</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#GDAL%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.1.</span> <span class="nav-text">GDAL源码安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%E5%90%8E%EF%BC%8CGDAL%E6%94%AF%E6%8C%81%E7%9A%84%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.1.2.</span> <span class="nav-text">查看编译安装后，GDAL支持的格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%A8Python%E4%B8%8B%E4%BD%BF%E7%94%A8GDAL"><span class="nav-number">1.1.3.</span> <span class="nav-text">在Python下使用GDAL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85%E5%90%8E%E5%8F%AF%E8%83%BD%E4%BC%9A%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.4.</span> <span class="nav-text">源码安装后可能会存在的问题</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Javy"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Javy</p>
+  <div class="site-description" itemprop="description">You can create art and beauty on a computer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/javyxu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;javyxu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018 - 2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javy</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'de44f4e91f73c590197c',
+      clientSecret: '840b907d657247c9ddcbcec968b641fda5d3b969',
+      repo        : 'javyxu.github.io',
+      owner       : 'javyxu',
+      admin       : ['javyxu'],
+      id          : '15f47fb9434552fd02bb2ad0c268423b',
+      proxy       : 'https://netnr-proxy.cloudno.de/https://github.com/login/oauth/access_token',
+        language: 'en',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

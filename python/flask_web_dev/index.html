@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"javyxu.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Flask Web 开发一、安装Flask由3个主要依赖：路由、调试和Web服务器网关接口（WSGI， Web Server gateway interface）子系统由Werkzeug提供；模版系统由Jinjia2提供；命令行集成由Click提供。 1.1 虚拟环境虚拟环境的安装和使用，请看本人的博客Python虚拟环境的安装 二、应用的基本机构2.1 初始化所有的Flask必须创建一个应用实例">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flask Web 开发">
+<meta property="og:url" content="https://javyxu.cn/python/flask_web_dev/index.html">
+<meta property="og:site_name" content="Tech Blog">
+<meta property="og:description" content="Flask Web 开发一、安装Flask由3个主要依赖：路由、调试和Web服务器网关接口（WSGI， Web Server gateway interface）子系统由Werkzeug提供；模版系统由Jinjia2提供；命令行集成由Click提供。 1.1 虚拟环境虚拟环境的安装和使用，请看本人的博客Python虚拟环境的安装 二、应用的基本机构2.1 初始化所有的Flask必须创建一个应用实例">
+<meta property="og:locale">
+<meta property="article:published_time" content="2018-12-15T09:30:00.000Z">
+<meta property="article:modified_time" content="2021-02-21T02:37:33.322Z">
+<meta property="article:author" content="Javy">
+<meta property="article:tag" content="Web Programming、Python、Flask">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://javyxu.cn/python/flask_web_dev/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>Flask Web 开发 | Tech Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Tech Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Javy's Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-algorithm">
+
+    <a href="/algorithm/" rel="section"><i class="fa fa-code fa-fw"></i>Algorithm</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/javyxu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="https://javyxu.cn/python/flask_web_dev/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Javy">
+      <meta itemprop="description" content="You can create art and beauty on a computer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Flask Web 开发
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2018-12-15 17:30:00" itemprop="dateCreated datePublished" datetime="2018-12-15T17:30:00+08:00">2018-12-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-21 10:37:33" itemprop="dateModified" datetime="2021-02-21T10:37:33+08:00">2021-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web-Programming/" itemprop="url" rel="index"><span itemprop="name">Web Programming</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Flask-Web-开发"><a href="#Flask-Web-开发" class="headerlink" title="Flask Web 开发"></a>Flask Web 开发</h2><h3 id="一、安装"><a href="#一、安装" class="headerlink" title="一、安装"></a>一、安装</h3><p>Flask由3个主要依赖：路由、调试和Web服务器网关接口（WSGI， Web Server gateway interface）子系统由Werkzeug提供；模版系统由Jinjia2提供；命令行集成由Click提供。</p>
+<h4 id="1-1-虚拟环境"><a href="#1-1-虚拟环境" class="headerlink" title="1.1 虚拟环境"></a>1.1 虚拟环境</h4><p>虚拟环境的安装和使用，请看本人的博客<a href="https://javyxu.cn/Python/python_virtual_env/">Python虚拟环境的安装</a></p>
+<h3 id="二、应用的基本机构"><a href="#二、应用的基本机构" class="headerlink" title="二、应用的基本机构"></a>二、应用的基本机构</h3><h4 id="2-1-初始化"><a href="#2-1-初始化" class="headerlink" title="2.1 初始化"></a>2.1 初始化</h4><p>所有的Flask必须创建一个应用实例。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask</span><br><span class="line">app = Flask(__name__)</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-路由和视图函数"><a href="#2-2-路由和视图函数" class="headerlink" title="2.2 路由和视图函数"></a>2.2 路由和视图函数</h4><a id="more"></a>
+<p>客户端把请求发送给Web服务器，Web服务器再把请求发送给Flask应用实例。</p>
+<p>处理URL和函数之间关系的程序成为<strong>路由</strong> 。</p>
+<p>比如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&lt;h1&gt;Hello World!&lt;/h1&gt;&#x27;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&lt;h1&gt;Hello World!&lt;/h1&gt;&#x27;</span></span><br><span class="line"></span><br><span class="line">app.add_url_rule(<span class="string">&#x27;/&#x27;</span>, <span class="string">&#x27;index&#x27;</span>, index)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/user/&lt;name&gt;&#x27;</span></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">user</span>(<span class="params">name</span>):</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&lt;h1&gt;Hello, &#123;&#125;!&lt;/h1&gt;&#x27;</span>.<span class="built_in">format</span>(name)</span><br></pre></td></tr></table></figure>
+<h4 id="2-3-请求-响应循环"><a href="#2-3-请求-响应循环" class="headerlink" title="2.3 请求-响应循环"></a>2.3 请求-响应循环</h4><h5 id="2-3-1-应用和请求上下文"><a href="#2-3-1-应用和请求上下文" class="headerlink" title="2.3.1 应用和请求上下文"></a>2.3.1 应用和请求上下文</h5><p>在Flask中有两种上下文：<strong>应用上下文</strong> 和<strong>请求上下文</strong> 。</p>
+<p>Flask上下文全局变量</p>
+<table>
+<thead>
+<tr>
+<th>变量名</th>
+<th>上下文</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>current_app</td>
+<td>应用上下文</td>
+<td>当前应用的应用实例</td>
+</tr>
+<tr>
+<td>g</td>
+<td>应用上下文</td>
+<td>处理请求时用作临时存储的对象， 每次请求都会重设这个变量</td>
+</tr>
+<tr>
+<td>request</td>
+<td>请求上下文</td>
+<td>请求对象，封装了客户端发出的HTTP请求中的内容</td>
+</tr>
+<tr>
+<td>session</td>
+<td>请求上下文</td>
+<td>用户会话，值为一个字典，存储请求之间需要“记住”的值</td>
+</tr>
+</tbody></table>
+<h5 id="2-3-2-请求对象"><a href="#2-3-2-请求对象" class="headerlink" title="2.3.2 请求对象"></a>2.3.2 请求对象</h5><p>Flask请求对象中最常用的属性和方法：</p>
+<p>| 属性或方法 | 说明 |<br>| form | 一个字段，存储请求提交的所有表单字段 |</p>
+<h3 id="二、应用编程接口"><a href="#二、应用编程接口" class="headerlink" title="二、应用编程接口"></a>二、应用编程接口</h3><p>Flask是开发表现层状态转移(REST，representational state transfer)架构Web服务的理想框架，因为Flask天生轻量。</p>
+<h4 id="2-1-REST简介"><a href="#2-1-REST简介" class="headerlink" title="2.1 REST简介"></a>2.1 REST简介</h4><p>REST架构方式的六大特征：</p>
+<ol>
+<li><p>客户端-服务端</p>
+<p>客户端和服务端之间必须要有明确的界线。</p>
+</li>
+<li><p>无状态</p>
+<p>客户端发出的请求这必须包含所有必要的信息。服务器不能在两次请求之间保存客户端的任何状态。</p>
+</li>
+<li><p>缓存</p>
+<p>服务器发出的响应可以标记为可缓存或不可缓存，这样处于优化目的，客户端（或客户端和服务器之间的中间服务）可以使用缓存。</p>
+</li>
+<li><p>接口统一</p>
+<p>客户端访问服务器资源时使用的协议必须一致、定义良好，且已经标准化。这是REST架构最复杂的一方面，涉及唯一的资源标识符、资源表述、客户端和服务器中间自描述的消息，以及超媒体（hypermedia）。</p>
+</li>
+<li><p>系统分层</p>
+<p>在客户端和服务器之间可以按需插入代理服务器、缓存或网关，以提高性能、稳定性和伸缩性。</p>
+</li>
+<li><p>按需编程</p>
+<p>客户端可以选择从服务器中下载代码，在客户端的上下文中执行。</p>
+</li>
+</ol>
+<h5 id="2-1-1-资源就是一切"><a href="#2-1-1-资源就是一切" class="headerlink" title="2.1.1 资源就是一切"></a>2.1.1 资源就是一切</h5><p><strong>资源</strong> 是REST架构风格的核心概念。在REST结构中。资源是应用中你要着重关注的事物。</p>
+<p>每个资源都要有唯一的URL表示。对HTTP协议来说，资源的标识符就是URL。</p>
+<p>某一类资源的集合也要有一个URL。</p>
+<p>API还可以为某一类资源的逻辑子集定义集合URL。</p>
+<h5 id="2-1-2-请求方法"><a href="#2-1-2-请求方法" class="headerlink" title="2.1.2 请求方法"></a>2.1.2 请求方法</h5><p>客户端应用在建立起的资源URL上发送请求，使用请求方法表示期望的操作。</p>
+<table>
+<thead>
+<tr>
+<th>请求方法</th>
+<th>目标</th>
+<th>说明</th>
+<th>HTTP状态码</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET</td>
+<td>单个资源的URL</td>
+<td>获取目标资源</td>
+<td>200</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>资源集合的URL</td>
+<td>获取资源的集合（如果是服务器实现了分页，还可以是一叶中的资源）</td>
+<td>200</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>资源集合的URL</td>
+<td>创建新资源，并将其加入目标集合。服务器为新资源指派URL，并在响应的Location首部中返回</td>
+<td>201</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>单个资源的URL</td>
+<td>修改一个现有资源。如果客户端能为资源指派URL，还可用来创建新资源</td>
+<td>200或204</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>单个资源的URL</td>
+<td>删除一个资源</td>
+<td>200或204</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>资源集合的URL</td>
+<td>删除目标集合中的所有资源</td>
+<td>200或204</td>
+</tr>
+</tbody></table>
+<h5 id="2-1-3-请求和响应主体"><a href="#2-1-3-请求和响应主体" class="headerlink" title="2.1.3 请求和响应主体"></a>2.1.3 请求和响应主体</h5><p>REST式Web服务常用的两种编码方式是Javascript对象表示方法（JSON，Javascript object notation）和可扩展标记语音（XML， extensible markup language）。</p>
+<p>在设计良好的REST式API这，客户端只需要知道几个顶级资源的URL，其他资源的URL则从响应中包含的链接上发掘。</p>
+<h5 id="2-1-4-版本"><a href="#2-1-4-版本" class="headerlink" title="2.1.4 版本"></a>2.1.4 版本</h5><p>在URL中加入Web服务的版本号有助于组织化管理新旧功能，让服务器能为新客户端提供新功能，同时继续支持旧版客户端。</p>
+<p>提供多版本支持会增加服务器的维护负担，但在某些情况下，这是不破坏现有部署且能让应用不断发展的唯一方式。等到所有客户端都升级到新版之后，可以弃用旧版服务，待时机成熟后再把旧版完全删除。</p>
+<h4 id="2-2-使用Flask实现REST式Web服务"><a href="#2-2-使用Flask实现REST式Web服务" class="headerlink" title="2.2 使用Flask实现REST式Web服务"></a>2.2 使用Flask实现REST式Web服务</h4><p>使用Flask创建REST式Web服务十分简单。使用少许细的route()装饰器及其methods可选参数可以声明服务器所提供资源URL的路由。处理JSON数据同样简单，请求中的JSON数据可以通过reques.get_json()转换成字典格式，而且可以使用Flask提供的辅助函数jsonify()，从Python字典中生成需要包含JSON的响应。</p>
+<h5 id="2-2-1-创建API蓝本"><a href="#2-2-1-创建API蓝本" class="headerlink" title="2.2.1 创建API蓝本"></a>2.2.1 创建API蓝本</h5><p>REST式API相关的路由式应用中一个自成一体的子集。因此，为了更好的组织代码、最好把这些路由放到一个独立的蓝本中。比如：</p>
+<ul>
+<li><p>API蓝本结构：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">|- flasky</span><br><span class="line">  |- app&#x2F;</span><br><span class="line">    |- api</span><br><span class="line">      |- __init__flB.py</span><br><span class="line">      |- users.py</span><br><span class="line">      |- posts.py</span><br><span class="line">      |- comments.py</span><br><span class="line">      |- errors.py</span><br><span class="line">      |- decorators.py</span><br></pre></td></tr></table></figure></li>
+<li><p>API蓝本的构造文件：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Blueprint</span><br><span class="line">api = Blueprint(<span class="string">&#x27;api&#x27;</span>, __name__)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> . <span class="keyword">import</span> posts, users, comments, errors</span><br></pre></td></tr></table></figure></li>
+<li><p>注册API蓝本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_app</span>(<span class="params">config_name</span>):</span></span><br><span class="line">    <span class="comment"># ...</span></span><br><span class="line">    <span class="keyword">from</span> .api <span class="keyword">import</span> api <span class="keyword">as</span> api_blueprint</span><br><span class="line">    app.register_blueprint(api_blueprint, url_prefix=<span class="string">&#x27;/api/v1&#x27;</span>)</span><br><span class="line">    <span class="comment"># ...</span></span><br></pre></td></tr></table></figure>
+<p>注册API蓝本时指定了一个URL前缀，因此蓝本中所有路由器的URL都以/api/v1开头。注册蓝本时设置前缀是好主意，无需在每个路由中硬编码版本号。</p>
+</li>
+</ul>
+<h5 id="2-2-2-错误处理"><a href="#2-2-2-错误处理" class="headerlink" title="2.2.2 错误处理"></a>2.2.2 错误处理</h5><p>REST式Web服务讲请求的状态告知客户端时，会在响应中发送适当的HTTP状态码，并将额外信息放入响应主体。客户端从Web服务得到的常见状态码如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>HTTP状态码</th>
+<th>名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>200</td>
+<td>OK</td>
+<td>请求成功</td>
+</tr>
+<tr>
+<td>201</td>
+<td>Created</td>
+<td>请求成功，而且创建一个新资源</td>
+</tr>
+<tr>
+<td>202</td>
+<td>Accepted</td>
+<td>请求已接收，但仍在处理中，将异步处理</td>
+</tr>
+<tr>
+<td>204</td>
+<td>No Content</td>
+<td>请求处理成功，但是返回的响应没有数据</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Bad Request</td>
+<td>请求无效或不一致</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized</td>
+<td>请求未包含身份验证信息，或者提供的凭证无效</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Foridden</td>
+<td>请求这发送的身份验证凭据无权访问目标</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found</td>
+<td>URL对应的资源不存在</td>
+</tr>
+<tr>
+<td>405</td>
+<td>Method Not Allowed</td>
+<td>指定资源不支持请求使用的方法</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error</td>
+<td>处理请求的过程这发生意外错误</td>
+</tr>
+</tbody></table>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>原创技术分享，您的支持将鼓励我继续创作</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Javy WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="Javy Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Web-Programming%E3%80%81Python%E3%80%81Flask/" rel="tag"># Web Programming、Python、Flask</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/python/orm_sqlalchemy/" rel="prev" title="Python下的ORM框架SQLAlchemy">
+      <i class="fa fa-chevron-left"></i> Python下的ORM框架SQLAlchemy
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/bigdata/oltp_olap_doc/" rel="next" title="OLTP和OLAP的关系">
+      OLTP和OLAP的关系 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Flask-Web-%E5%BC%80%E5%8F%91"><span class="nav-number">1.</span> <span class="nav-text">Flask Web 开发</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.</span> <span class="nav-text">一、安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 虚拟环境</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%BA%94%E7%94%A8%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%9C%BA%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">二、应用的基本机构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-%E8%B7%AF%E7%94%B1%E5%92%8C%E8%A7%86%E5%9B%BE%E5%87%BD%E6%95%B0"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 路由和视图函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-%E8%AF%B7%E6%B1%82-%E5%93%8D%E5%BA%94%E5%BE%AA%E7%8E%AF"><span class="nav-number">1.2.3.</span> <span class="nav-text">2.3 请求-响应循环</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3-1-%E5%BA%94%E7%94%A8%E5%92%8C%E8%AF%B7%E6%B1%82%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">2.3.1 应用和请求上下文</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3-2-%E8%AF%B7%E6%B1%82%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">2.3.2 请求对象</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.3.</span> <span class="nav-text">二、应用编程接口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-REST%E7%AE%80%E4%BB%8B"><span class="nav-number">1.3.1.</span> <span class="nav-text">2.1 REST简介</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-1-%E8%B5%84%E6%BA%90%E5%B0%B1%E6%98%AF%E4%B8%80%E5%88%87"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">2.1.1 资源就是一切</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-2-%E8%AF%B7%E6%B1%82%E6%96%B9%E6%B3%95"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">2.1.2 请求方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-3-%E8%AF%B7%E6%B1%82%E5%92%8C%E5%93%8D%E5%BA%94%E4%B8%BB%E4%BD%93"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">2.1.3 请求和响应主体</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-4-%E7%89%88%E6%9C%AC"><span class="nav-number">1.3.1.4.</span> <span class="nav-text">2.1.4 版本</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-%E4%BD%BF%E7%94%A8Flask%E5%AE%9E%E7%8E%B0REST%E5%BC%8FWeb%E6%9C%8D%E5%8A%A1"><span class="nav-number">1.3.2.</span> <span class="nav-text">2.2 使用Flask实现REST式Web服务</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-1-%E5%88%9B%E5%BB%BAAPI%E8%93%9D%E6%9C%AC"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">2.2.1 创建API蓝本</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-2-%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">2.2.2 错误处理</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Javy"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Javy</p>
+  <div class="site-description" itemprop="description">You can create art and beauty on a computer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/javyxu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;javyxu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018 - 2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javy</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'de44f4e91f73c590197c',
+      clientSecret: '840b907d657247c9ddcbcec968b641fda5d3b969',
+      repo        : 'javyxu.github.io',
+      owner       : 'javyxu',
+      admin       : ['javyxu'],
+      id          : 'afd30fe4690da2d5367e0fb704b041f1',
+      proxy       : 'https://netnr-proxy.cloudno.de/https://github.com/login/oauth/access_token',
+        language: 'en',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>

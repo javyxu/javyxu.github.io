@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"javyxu.cn","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="十大机器学习算法简介1. 线性回归(Linear Regression)线性回归(Linear Regression)可能是统计和机器学习中最著名和最容易理解的算法之一。 预测建模主要关注的是最小化模型的误差，或尽可能做出最准确的预测，而牺牲了可解释性。我们将借用、重用和窃取许多不同领域的算法，包括统计数据，并将它们用于这些目的。 线性回归的表示是一个方程，它通过为称为系数(B)的输入变量寻找特定">
+<meta property="og:type" content="article">
+<meta property="og:title" content="十大机器学习算法简介">
+<meta property="og:url" content="https://javyxu.cn/machine_learning/top_10_machine_learning_algorithms/index.html">
+<meta property="og:site_name" content="Tech Blog">
+<meta property="og:description" content="十大机器学习算法简介1. 线性回归(Linear Regression)线性回归(Linear Regression)可能是统计和机器学习中最著名和最容易理解的算法之一。 预测建模主要关注的是最小化模型的误差，或尽可能做出最准确的预测，而牺牲了可解释性。我们将借用、重用和窃取许多不同领域的算法，包括统计数据，并将它们用于这些目的。 线性回归的表示是一个方程，它通过为称为系数(B)的输入变量寻找特定">
+<meta property="og:locale">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/top_10_machine_learning_algorithms/top_10_machine_learning_algorithms/linear_regression.jpeg">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/top_10_machine_learning_algorithms/top_10_machine_learning_algorithms/logistic_regression.jpeg">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/top_10_machine_learning_algorithms/top_10_machine_learning_algorithms/lda.png">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/top_10_machine_learning_algorithms/top_10_machine_learning_algorithms/decision_trees.png">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/top_10_machine_learning_algorithms/top_10_machine_learning_algorithms/naive_bayes.png">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/top_10_machine_learning_algorithms/top_10_machine_learning_algorithms/knn.png">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/top_10_machine_learning_algorithms/top_10_machine_learning_algorithms/lvq.png">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/top_10_machine_learning_algorithms/top_10_machine_learning_algorithms/support_vector_machine.jpeg">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/top_10_machine_learning_algorithms/top_10_machine_learning_algorithms/random_forest.png">
+<meta property="og:image" content="https://javyxu.cn/machine_learning/top_10_machine_learning_algorithms/top_10_machine_learning_algorithms/adaboost.jpeg">
+<meta property="article:published_time" content="2019-03-10T01:00:00.000Z">
+<meta property="article:modified_time" content="2021-02-21T02:37:33.314Z">
+<meta property="article:author" content="Javy">
+<meta property="article:tag" content="ML">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://javyxu.cn/machine_learning/top_10_machine_learning_algorithms/top_10_machine_learning_algorithms/linear_regression.jpeg">
+
+<link rel="canonical" href="https://javyxu.cn/machine_learning/top_10_machine_learning_algorithms/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh'
+  };
+</script>
+
+  <title>十大机器学习算法简介 | Tech Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Tech Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Javy's Blog</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-algorithm">
+
+    <a href="/algorithm/" rel="section"><i class="fa fa-code fa-fw"></i>Algorithm</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/javyxu" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh">
+    <link itemprop="mainEntityOfPage" href="https://javyxu.cn/machine_learning/top_10_machine_learning_algorithms/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Javy">
+      <meta itemprop="description" content="You can create art and beauty on a computer.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tech Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          十大机器学习算法简介
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2019-03-10 09:00:00" itemprop="dateCreated datePublished" datetime="2019-03-10T09:00:00+08:00">2019-03-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-02-21 10:37:33" itemprop="dateModified" datetime="2021-02-21T10:37:33+08:00">2021-02-21</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine Learning</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="十大机器学习算法简介"><a href="#十大机器学习算法简介" class="headerlink" title="十大机器学习算法简介"></a>十大机器学习算法简介</h2><h3 id="1-线性回归-Linear-Regression"><a href="#1-线性回归-Linear-Regression" class="headerlink" title="1. 线性回归(Linear Regression)"></a>1. 线性回归(Linear Regression)</h3><p>线性回归(Linear Regression)可能是统计和机器学习中最著名和最容易理解的算法之一。</p>
+<p>预测建模主要关注的是最小化模型的误差，或尽可能做出最准确的预测，而牺牲了可解释性。我们将借用、重用和窃取许多不同领域的算法，包括统计数据，并将它们用于这些目的。</p>
+<p>线性回归的表示是一个方程，它通过为称为系数(B)的输入变量寻找特定权重，来描述一条最适合输入变量(x)和输出变量(y)之间关系的直线，如下图所示。<br><img src="top_10_machine_learning_algorithms/linear_regression.jpeg" alt="Linear Regression"><br>例如:y = B0 + B1 * x</p>
+<p>我们将在给定输入x的情况下预测y线性回归学习算法的目标是找到系数B0和B1的值。</p>
+<p>从数据中学习线性回归模型可以使用不同的技术，如普通最小二乘的线性代数解和梯度下降优化。</p>
+<p>线性回归已有200多年的历史，并得到了广泛的研究。使用此技术时，一些好的经验规则是删除非常相似(相关)的变量，并尽可能从数据中删除噪声。这是一种快速、简单的方法，也是一种值得尝试的好算法。</p>
+<h3 id="2-逻辑回归-Logistic-Regression"><a href="#2-逻辑回归-Logistic-Regression" class="headerlink" title="2. 逻辑回归(Logistic Regression)"></a>2. 逻辑回归(Logistic Regression)</h3><p>逻辑回归(Logistic Regression)是机器学习从统计学领域借用的另一种技术。它是二进制分类问题(具有两个类值的问题)的首选方法。</p>
+<p>逻辑回归类似于线性回归，其目标是找到每个输入变量权重系数的值。与线性回归不同，输出的预测是使用一个称为逻辑函数的非线性函数来转换的。</p>
+<p>logistic函数看起来像一个大S，它将把任何值转换成0到1的范围。这很有用，因为我们可以对logistic函数的输出应用一个规则，将值捕捉到0和1(例如，如果小于0.5，则输出1)，并预测一个类值。<br><img src="top_10_machine_learning_algorithms/logistic_regression.jpeg" alt="Logistic Regression"></p>
+<p>由于模型的学习方式，逻辑回归所做的预测也可以用作属于类0或类1的给定数据实例的概率。这对于需要为预测提供更多理论依据的问题非常有用。</p>
+<p>与线性回归类似，当删除与输出变量无关的属性以及彼此非常相似(相关)的属性时，逻辑回归的效果更好。该模型学习速度快，对二值分类问题有效。</p>
+<h3 id="3-线性判断分析-Linear-Discriminant-Analysis"><a href="#3-线性判断分析-Linear-Discriminant-Analysis" class="headerlink" title="3. 线性判断分析(Linear Discriminant Analysis)"></a>3. 线性判断分析(Linear Discriminant Analysis)</h3><p>逻辑回归是一种传统的分类算法，传统上仅限于两类分类问题。如果你有两个以上的类，那么线性判别分析算法是首选的线性分类技术。</p>
+<p>LDA(Linear Discriminant Analysis)的表示非常直接。它包含为每个类计算的数据的统计属性。对于单个输入变量，这包括:</p>
+<ul>
+<li>每个类的平均值。</li>
+<li>计算所有类的方差。<br><img src="top_10_machine_learning_algorithms/lda.png" alt="lda"></li>
+</ul>
+<p>预测是通过计算每个类的判别值，并对最大值的类进行预测。该技术假设数据具有高斯分布(钟形曲线)，因此最好预先从数据中删除异常值。它是一种简单而有效的分类预测建模方法。</p>
+<h3 id="4-分类和回归树-Classification-and-Regression-Trees"><a href="#4-分类和回归树-Classification-and-Regression-Trees" class="headerlink" title="4. 分类和回归树(Classification and Regression Trees)"></a>4. 分类和回归树(Classification and Regression Trees)</h3><a id="more"></a>
+<p>决策树(Decision Trees)是机器学习预测建模的一种重要算法。</p>
+<p>决策树模型的表示形式为二叉树。这是来自算法和数据结构的二叉树，没什么特别的。每个节点表示一个输入变量(x)和该变量上的一个分歧点(假设该变量是数值型的)。<br><img src="top_10_machine_learning_algorithms/decision_trees.png" alt="decision_trees"></p>
+<p>树的叶节点包含一个用于进行预测的输出变量(y)。通过遍历树的拆分，直到到达一个叶子节点，并在该叶子节点输出类值，就可以进行预测。</p>
+<p>树学起来很快，预测起来也很快。它们对于广泛的问题通常是准确的，并且不需要为数据做任何特殊的准备。</p>
+<h3 id="5-朴素贝叶斯-Naive-Bayes"><a href="#5-朴素贝叶斯-Naive-Bayes" class="headerlink" title="5. 朴素贝叶斯(Naive Bayes)"></a>5. 朴素贝叶斯(Naive Bayes)</h3><p>朴素贝叶斯(Naive Bayes)是一种简单但功能惊人的预测建模算法。</p>
+<p>该模型由两类概率组成，可以直接从你的训练数据中计算出来:1)每节课的概率;2)给定每个x值，每个类的条件概率。概率模型一旦计算出来，就可以利用贝叶斯定理对新数据进行预测。当你的数据是实值的时候，通常采用高斯分布(钟形曲线)，这样你就可以很容易地估计这些概率。<br><img src="top_10_machine_learning_algorithms/naive_bayes.png" alt="naive_bayes"></p>
+<p>朴素贝叶斯之所以称为朴素贝叶斯，是因为它假定每个输入变量都是独立的。这是一个强烈的假设，对真实数据来说是不现实的，然而，该技术在许多复杂的问题上是非常有效的。</p>
+<h3 id="6-K最邻近算法-K-Nearest-Neighbors"><a href="#6-K最邻近算法-K-Nearest-Neighbors" class="headerlink" title="6. K最邻近算法(K-Nearest Neighbors)"></a>6. K最邻近算法(K-Nearest Neighbors)</h3><p>KNN(K-Nearest Neighbors)算法简单有效。KNN的模型表示是整个训练数据集。很简单的对吧?</p>
+<p>通过搜索整个训练集中K个最相似的实例(邻居)并总结这些K个实例的输出变量，可以预测一个新的数据点。对于回归问题，这可能是平均输出变量，对于分类问题，这可能是模式(或最常见的)类值。</p>
+<p>诀窍在于如何确定数据实例之间的相似性。如果您的属性都具有相同的比例(例如，都以英寸为单位)，那么最简单的技术就是使用欧式距离，您可以根据每个输入变量之间的差异直接计算这个数字。<br><img src="top_10_machine_learning_algorithms/knn.png" alt="knn"></p>
+<p>KNN可能需要大量内存或空间来存储所有数据，但只有在需要预测时才会及时执行计算(或学习)。您还可以随着时间的推移更新和管理您的培训实例，以保持预测的准确性。</p>
+<p>距离或接近的概念可能在非常高的维度(许多输入变量)中被打破，这可能会对算法在您的问题上的性能产生负面影响。这就是所谓的维数诅咒。它建议只使用与预测输出变量最相关的输入变量。</p>
+<h3 id="7-学习矢量量化-Learning-Vector-Quantization"><a href="#7-学习矢量量化-Learning-Vector-Quantization" class="headerlink" title="7. 学习矢量量化(Learning Vector Quantization)"></a>7. 学习矢量量化(Learning Vector Quantization)</h3><p>k近邻的一个缺点是，您需要保留整个训练数据集。学习向量量化算法(简称LVQ)是一种人工神经网络算法，它允许您选择保留多少训练实例，并准确地了解这些实例应该是什么样子的。</p>
+<p>LVQ的表示是一组码本向量。它们在开始时是随机选择的，经过多次学习算法的迭代，最适合于总结训练数据集。通过学习，码本向量可以像k近邻一样进行预测。通过计算每个码本向量与新数据实例之间的距离，可以找到最相似的邻居(最佳匹配码本向量)。然后返回最佳匹配单元的类值或(回归情况下的实值)作为预测。如果将数据重新调整为具有相同的范围(例如0到1之间)，就可以获得最佳结果。<br><img src="top_10_machine_learning_algorithms/lvq.png" alt="LVQ"><br>如果您发现KNN对您的数据集提供了良好的结果，请尝试使用LVQ来减少存储整个培训数据集的内存需求。</p>
+<h3 id="8-支持向量机-Support-Vector-Machines"><a href="#8-支持向量机-Support-Vector-Machines" class="headerlink" title="8. 支持向量机(Support Vector Machines)"></a>8. 支持向量机(Support Vector Machines)</h3><p>支持向量机(Support Vector Machines)可能是最受欢迎和谈论的机器学习算法之一。</p>
+<p>超平面是一条分割输入变量空间的线。在支持向量机中，选择一个超平面将输入变量空间中的点按类(0类或1类)进行最佳分离。在二维中，你可以把它想象成一条直线我们假设所有的输入点都可以被这条直线完全分开。支持向量机的学习算法通过超平面找到最优分类系数。<br><img src="top_10_machine_learning_algorithms/support_vector_machine.jpeg" alt="support_vector_machine"><br>超平面与最近数据点之间的距离称为边距。能够将这两个类分开的最佳或最优超平面是具有最大边界的直线。只有这些点与超平面的定义和分类器的构造有关。这些点称为支持向量。它们支持或定义超平面。在实际应用中，采用了一种优化算法来寻找使边值最大化的系数值。</p>
+<p>SVM可能是最强大的开箱即用分类器之一，值得在您的数据集上尝试。</p>
+<h3 id="9-随机森林-Bagging-and-Random-Forest"><a href="#9-随机森林-Bagging-and-Random-Forest" class="headerlink" title="9. 随机森林(Bagging and Random Forest)"></a>9. 随机森林(Bagging and Random Forest)</h3><p>随机森林(Bagging and Random Forest)是最流行和最强大的机器学习算法之一。它是一种集成机器学习算法，称为引导聚集或袋装。</p>
+<p>bootstrap是一种强大的统计方法，用于从数据样本中估计数量。比如一个平均值。取大量数据样本，计算均值，然后取所有均值的平均值这样就能更好地估计真实均值。</p>
+<p>在bagging中，使用了相同的方法，但用于估计整个统计模型，最常见的是决策树。获取多个训练数据样本，然后为每个数据样本构建模型。当您需要对新数据进行预测时，每个模型都会进行预测，并对预测进行平均，以便更好地估计真实的输出值。<br><img src="top_10_machine_learning_algorithms/random_forest.png" alt="Bagging and Random Forest"></p>
+<p>随机森林是这种方法的一个改进，它创建决策树，这样就不用选择最优的分割点，而是通过引入随机性来进行次最优分割。</p>
+<p>因此，为每个数据样本创建的模型比其他情况下的模型更加不同，但仍然以其独特和不同的方式准确。结合他们的预测，可以更好地估计真实的潜在产值。</p>
+<p>如果您使用高方差的算法(如决策树)获得良好的结果，那么您通常可以通过打包该算法获得更好的结果。</p>
+<h3 id="10-增强和自适应增强算法-Boosting-and-AdaBoost"><a href="#10-增强和自适应增强算法-Boosting-and-AdaBoost" class="headerlink" title="10. 增强和自适应增强算法(Boosting and AdaBoost)"></a>10. 增强和自适应增强算法(Boosting and AdaBoost)</h3><p>增强(Boosting)是一种集成技术，它试图从一些弱分类器创建一个强分类器。这是通过从训练数据构建一个模型，然后创建第二个模型，该模型试图纠正第一个模型中的错误。在完全预测训练集或添加最大数量的模型之前，将添加模型。</p>
+<p>AdaBoost是第一个真正成功的用于二进制分类的增强算法。这是理解促进的最佳起点。现代增压方法建立在AdaBoost的基础上，最著名的是随机梯度增压机。<br><img src="top_10_machine_learning_algorithms/adaboost.jpeg" alt="AdaBoost"></p>
+<p>AdaBoost用于短决策树。在创建第一个树之后，将使用树在每个训练实例上的性能来衡量创建的下一个树应该对每个训练实例关注多少。难以预测的训练数据权重更大，而易于预测的实例权重更小。模型是一个接一个依次创建的，每个模型都更新训练实例上的权重，这些实例会影响序列中的下一棵树执行的学习。在所有的树被建立之后，对新的数据进行预测，并且每棵树的性能都由它在训练数据上的准确性来加权。</p>
+<p>由于算法在纠正错误上投入了如此多的精力，因此清除数据中的异常值是非常重要的。</p>
+<p><em>原文请看此处：<br><a target="_blank" rel="noopener" href="https://blog.goodaudience.com/top-10-machine-learning-algorithms-2a9a3e1bdaff">TOP 10 Machine Learning Algorithms</a></em></p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>原创技术分享，您的支持将鼓励我继续创作</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.png" alt="Javy WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.png" alt="Javy Alipay">
+        <p>Alipay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ML/" rel="tag"># ML</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/gdal/gdal_using/" rel="prev" title="GDAL的简介和安装">
+      <i class="fa fa-chevron-left"></i> GDAL的简介和安装
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/machine_learning/deep_learning_terminology/" rel="next" title="你必须知道深度学习术语">
+      你必须知道深度学习术语 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="gitalk-container"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%A4%A7%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">十大机器学习算法简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92-Linear-Regression"><span class="nav-number">1.1.</span> <span class="nav-text">1. 线性回归(Linear Regression)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92-Logistic-Regression"><span class="nav-number">1.2.</span> <span class="nav-text">2. 逻辑回归(Logistic Regression)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%BA%BF%E6%80%A7%E5%88%A4%E6%96%AD%E5%88%86%E6%9E%90-Linear-Discriminant-Analysis"><span class="nav-number">1.3.</span> <span class="nav-text">3. 线性判断分析(Linear Discriminant Analysis)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%88%86%E7%B1%BB%E5%92%8C%E5%9B%9E%E5%BD%92%E6%A0%91-Classification-and-Regression-Trees"><span class="nav-number">1.4.</span> <span class="nav-text">4. 分类和回归树(Classification and Regression Trees)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF-Naive-Bayes"><span class="nav-number">1.5.</span> <span class="nav-text">5. 朴素贝叶斯(Naive Bayes)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-K%E6%9C%80%E9%82%BB%E8%BF%91%E7%AE%97%E6%B3%95-K-Nearest-Neighbors"><span class="nav-number">1.6.</span> <span class="nav-text">6. K最邻近算法(K-Nearest Neighbors)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-%E5%AD%A6%E4%B9%A0%E7%9F%A2%E9%87%8F%E9%87%8F%E5%8C%96-Learning-Vector-Quantization"><span class="nav-number">1.7.</span> <span class="nav-text">7. 学习矢量量化(Learning Vector Quantization)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA-Support-Vector-Machines"><span class="nav-number">1.8.</span> <span class="nav-text">8. 支持向量机(Support Vector Machines)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-%E9%9A%8F%E6%9C%BA%E6%A3%AE%E6%9E%97-Bagging-and-Random-Forest"><span class="nav-number">1.9.</span> <span class="nav-text">9. 随机森林(Bagging and Random Forest)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-%E5%A2%9E%E5%BC%BA%E5%92%8C%E8%87%AA%E9%80%82%E5%BA%94%E5%A2%9E%E5%BC%BA%E7%AE%97%E6%B3%95-Boosting-and-AdaBoost"><span class="nav-number">1.10.</span> <span class="nav-text">10. 增强和自适应增强算法(Boosting and AdaBoost)</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Javy"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Javy</p>
+  <div class="site-description" itemprop="description">You can create art and beauty on a computer.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/javyxu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;javyxu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018 - 2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Javy</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : 'de44f4e91f73c590197c',
+      clientSecret: '840b907d657247c9ddcbcec968b641fda5d3b969',
+      repo        : 'javyxu.github.io',
+      owner       : 'javyxu',
+      admin       : ['javyxu'],
+      id          : 'fda1c7f0a27295fa90e91eae587bbf44',
+      proxy       : 'https://netnr-proxy.cloudno.de/https://github.com/login/oauth/access_token',
+        language: 'en',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
+
+</body>
+</html>
